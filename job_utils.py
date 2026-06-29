@@ -25,6 +25,7 @@ class JobRecord:
 
     title: str
     specialty: str = ""
+    experience_level: str = ""
     hospital: str = ""
     location: str = ""
     state: str = ""
@@ -92,9 +93,17 @@ def contains_any(text: str, keywords: list[str]) -> bool:
 
 def detect_specialty(text: str) -> str:
     text_lower = text.lower()
-    for spec in config.SPECIALTY_KEYWORDS:
-        if spec.lower() in text_lower:
-            return spec.title()
+    for phrase, display in config.SPECIALTY_RULES:
+        if phrase.lower() in text_lower:
+            return display
+    return ""
+
+
+def detect_experience_level(text: str) -> str:
+    text_lower = text.lower()
+    for phrase, display in config.EXPERIENCE_RULES:
+        if phrase.lower() in text_lower:
+            return display
     return ""
 
 

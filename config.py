@@ -10,102 +10,146 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 # --- Search profile ---
+# Jobs are collected when title/description contains ANY of these (case-insensitive).
 
 KEYWORDS = [
-
-    "registrar",
-
-    "senior registrar",
-
-    "PHO",
-
-    "RMO",
-
-    "resident medical officer",
-
-    "consultant",
-
-    "house officer",
-
+    # Experience / role level
     "medical officer",
-
-    "obstetrics",
-
-    "gynaecology",
-
-    "paediatrics",
-
-    "emergency medicine",
-
-    "general medicine",
-
-]
-
-SPECIALTY_KEYWORDS = [
-
-    "obstetrics",
-
-    "gynaecology",
-
-    "obstetrics and gynaecology",
-
-    "paediatrics",
-
-    "pediatrics",
-
-    "emergency medicine",
-
-    "general medicine",
-
-    "internal medicine",
-
-    "surgery",
-
-    "anaesthetics",
-
-    "anesthetics",
-
-    "psychiatry",
-
-    "radiology",
-
-    "pathology",
-
-    "general practice",
-
-    "gp",
-
-]
-
-EXPERIENCE_LEVEL_KEYWORDS = [
-
+    "resident doctor",
+    "junior doctor",
     "registrar",
-
     "senior registrar",
-
     "consultant",
-
-    "PHO",
-
-    "RMO",
-
+    "general practitioner",
+    "gp",
     "resident medical officer",
-
+    "rmo",
     "house officer",
-
+    "pho",
+    "principal house officer",
+    "jmo",
     "junior medical officer",
-
-    "JMO",
-
     "intern",
-
-    "resident",
-
     "fellow",
-
     "staff specialist",
-
+    # Specialties
+    "general physician",
+    "internal medicine",
+    "emergency medicine",
+    "icu",
+    "intensive care",
+    "critical care",
+    "general surgery",
+    "orthopaedics",
+    "orthopedics",
+    "cardiology",
+    "cardiologist",
+    "neurology",
+    "neurologist",
+    "oncology",
+    "oncologist",
+    "anaesthesia",
+    "anaesthetics",
+    "anesthetics",
+    "radiology",
+    "psychiatry",
+    "paediatrics",
+    "pediatrics",
+    "obstetrics & gynaecology",
+    "obstetrics and gynaecology",
+    "obstetrics",
+    "gynaecology",
+    "gynecology",
+    "o&g",
+    "dermatology",
+    "ophthalmology",
+    "ent",
+    "otolaryngology",
+    "urology",
+    "gastroenterology",
+    "nephrology",
+    "pulmonology",
+    "respiratory medicine",
+    "endocrinology",
+    "pathology",
+    "general medicine",
+    "general practice",
 ]
+
+# Longest phrases first — used for Excel Specialty column (canonical display names).
+SPECIALTY_RULES: list[tuple[str, str]] = [
+    ("obstetrics & gynaecology", "Obstetrics & Gynaecology"),
+    ("obstetrics and gynaecology", "Obstetrics & Gynaecology"),
+    ("obstetrics and gynecology", "Obstetrics & Gynaecology"),
+    ("emergency medicine", "Emergency Medicine"),
+    ("internal medicine", "Internal Medicine"),
+    ("general physician", "General Physician"),
+    ("general practitioner", "General Practitioner (GP)"),
+    ("general practice", "General Practitioner (GP)"),
+    ("general surgery", "General Surgery"),
+    ("general medicine", "Internal Medicine"),
+    ("intensive care", "ICU"),
+    ("critical care", "ICU"),
+    ("respiratory medicine", "Pulmonology"),
+    ("otolaryngology", "ENT"),
+    ("orthopaedics", "Orthopaedics"),
+    ("orthopedics", "Orthopaedics"),
+    ("gastroenterology", "Gastroenterology"),
+    ("endocrinology", "Endocrinology"),
+    ("ophthalmology", "Ophthalmology"),
+    ("anaesthetics", "Anaesthesia"),
+    ("anesthetics", "Anaesthesia"),
+    ("anaesthesia", "Anaesthesia"),
+    ("paediatrics", "Paediatrics"),
+    ("pediatrics", "Paediatrics"),
+    ("gynaecology", "Obstetrics & Gynaecology"),
+    ("gynecology", "Obstetrics & Gynaecology"),
+    ("obstetrics", "Obstetrics & Gynaecology"),
+    ("o&g", "Obstetrics & Gynaecology"),
+    ("cardiology", "Cardiology"),
+    ("cardiologist", "Cardiology"),
+    ("neurology", "Neurology"),
+    ("neurologist", "Neurology"),
+    ("oncology", "Oncology"),
+    ("oncologist", "Oncology"),
+    ("radiology", "Radiology"),
+    ("psychiatry", "Psychiatry"),
+    ("psychiatrist", "Psychiatry"),
+    ("dermatology", "Dermatology"),
+    ("dermatologist", "Dermatology"),
+    ("gastroenterology", "Gastroenterology"),
+    ("nephrology", "Nephrology"),
+    ("pulmonology", "Pulmonology"),
+    ("pathology", "Pathology"),
+    ("urology", "Urology"),
+    ("ent", "ENT"),
+    ("icu", "ICU"),
+]
+
+SPECIALTY_KEYWORDS = [phrase for phrase, _ in SPECIALTY_RULES]
+
+# Longest phrases first — used for Excel Experience Level column.
+EXPERIENCE_RULES: list[tuple[str, str]] = [
+    ("senior registrar", "Senior Registrar"),
+    ("principal house officer", "PHO"),
+    ("resident medical officer", "Resident Doctor"),
+    ("junior medical officer", "Junior Doctor"),
+    ("resident doctor", "Resident Doctor"),
+    ("junior doctor", "Junior Doctor"),
+    ("medical officer", "Medical Officer"),
+    ("house officer", "House Officer"),
+    ("staff specialist", "Consultant"),
+    ("general practitioner", "General Practitioner (GP)"),
+    ("registrar", "Registrar"),
+    ("consultant", "Consultant"),
+    ("fellow", "Fellow"),
+    ("intern", "Intern"),
+    ("rmo", "Resident Doctor"),
+    ("pho", "PHO"),
+    ("jmo", "Junior Doctor"),
+]
+
+EXPERIENCE_LEVEL_KEYWORDS = [phrase for phrase, _ in EXPERIENCE_RULES]
 
 STATE_ABBREVS = {
 
@@ -278,6 +322,7 @@ PLAYWRIGHT_WAIT_MS = 4000
 SHEET_COLUMNS = [
     "Job Title",
     "Specialty",
+    "Experience Level",
     "Hospital",
     "Location",
     "State",
@@ -346,6 +391,7 @@ APPLY_QUEUE_COLUMNS = [
     "Source Sheet",
     "Job Title",
     "Specialty",
+    "Experience Level",
     "Hospital",
     "Location",
     "State",

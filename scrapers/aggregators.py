@@ -9,6 +9,7 @@ from job_utils import (
     JobRecord,
     contains_au_location,
     contains_non_au_location,
+    detect_experience_level,
     detect_specialty,
     detect_state,
     passes_filters,
@@ -108,6 +109,7 @@ def scrape_pageup() -> list[JobRecord]:
             job = JobRecord(
                 title=title[:200],
                 specialty=detect_specialty(card_text),
+                experience_level=detect_experience_level(card_text),
                 hospital=hospital or "AU Health Service",
                 location=state or "Australia",
                 state=state or "Australia",

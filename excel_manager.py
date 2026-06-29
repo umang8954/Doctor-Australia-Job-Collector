@@ -12,7 +12,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
 import config
-from job_utils import JobRecord, dedup_key, format_date, format_dt, now_aest, parse_added_on
+from job_utils import JobRecord, dedup_key, detect_experience_level, format_date, format_dt, now_aest, parse_added_on
 from profile_loader import load_profiles, profile_summary_rows
 from resume_matcher import match_label, score_all_profiles, score_job_for_profile
 
@@ -98,6 +98,20 @@ class ExcelManager:
                     ws.cell(1, insert_at, col)
                     changed = True
                     headers = [ws.cell(1, c).value for c in range(1, ws.max_column + 1)]
+            if "Experience Level" not in headers:
+                insert_at = headers.index("Specialty") + 2 if "Specialty" in headers else 3
+                ws.insert_cols(insert_at)
+                ws.cell(1, insert_at, "Experience Level")
+                changed = True
+                headers = [ws.cell(1, c).value for c in range(1, ws.max_column + 1)]
+                title_col = headers.index("Job Title") + 1 if "Job Title" in headers else 1
+                spec_col = headers.index("Specialty") + 1 if "Specialty" in headers else 2
+                for row in range(2, ws.max_row + 1):
+                    title = ws.cell(row, title_col).value or ""
+                    specialty = ws.cell(row, spec_col).value or ""
+                    level = detect_experience_level(f"{title} {specialty}")
+                    if level:
+                        ws.cell(row, insert_at, level)
         if changed:
             wb.save(self.path)
 
@@ -201,6 +215,7 @@ class ExcelManager:
             row_data = [
                 job.title,
                 job.specialty,
+                job.experience_level,
                 job.hospital,
                 job.location,
                 job.state,
@@ -253,18 +268,21 @@ class ExcelManager:
                 title = src.cell(row, 1).value
                 if not title:
                     continue
-                hospital = src.cell(row, 3).value or ""
-                state = src.cell(row, 5).value or ""
-                link = src.cell(row, 9).value or ""
-                best_name = src.cell(row, 11).value or ""
-                best_pct = src.cell(row, 12).value or 0
+                hospital = safe_cell(src, row, "Hospital", self.COL_MAP)
+                state = safe_cell(src, row, "State", self.COL_MAP)
+                link = safe_cell(src, row, "Apply Link", self.COL_MAP)
+                best_name = safe_cell(src, row, "Best Profile", self.COL_MAP)
+                best_pct = src.cell(row, self.COL_MAP["Match %"]).value or 0
                 row_data = [title, sheet, hospital, state, link, best_name, best_pct]
-                desc = f"{title} {src.cell(row, 2).value or ''} {hospital}"
+                desc = (
+                    f"{title} {safe_cell(src, row, 'Specialty', self.COL_MAP)} "
+                    f"{safe_cell(src, row, 'Experience Level', self.COL_MAP)} {hospital}"
+                )
                 for p in self.profiles:
                     pct = score_job_for_profile(
                         p, str(title), desc,
-                        str(src.cell(row, 2).value or ""),
-                        str(src.cell(row, 4).value or ""),
+                        str(safe_cell(src, row, "Specialty", self.COL_MAP)),
+                        str(safe_cell(src, row, "Location", self.COL_MAP)),
                         str(state),
                     )
                     row_data.append(pct)
@@ -346,14 +364,15 @@ class ExcelManager:
                     "profile": safe_cell(ws, row, "Best Profile", self.COL_MAP),
                     "sheet": sheet,
                     "title": str(title),
-                    "specialty": ws.cell(row, 2).value or "",
-                    "hospital": ws.cell(row, 3).value or "",
-                    "location": ws.cell(row, 4).value or "",
-                    "state": ws.cell(row, 5).value or "",
-                    "link": ws.cell(row, 9).value or "",
+                    "specialty": safe_cell(ws, row, "Specialty", self.COL_MAP),
+                    "experience": safe_cell(ws, row, "Experience Level", self.COL_MAP),
+                    "hospital": safe_cell(ws, row, "Hospital", self.COL_MAP),
+                    "location": safe_cell(ws, row, "Location", self.COL_MAP),
+                    "state": safe_cell(ws, row, "State", self.COL_MAP),
+                    "link": safe_cell(ws, row, "Apply Link", self.COL_MAP),
                     "match_pct": match_pct,
                     "status": status,
-                    "notes": ws.cell(row, 15).value or "",
+                    "notes": safe_cell(ws, row, "Notes", self.COL_MAP),
                 })
 
         candidates.sort(key=lambda c: c["match_pct"], reverse=True)
@@ -364,6 +383,7 @@ class ExcelManager:
                 c["sheet"],
                 c["title"],
                 c["specialty"],
+                c["experience"],
                 c["hospital"],
                 c["location"],
                 c["state"],
@@ -392,7 +412,7 @@ class ExcelManager:
             profile_jobs.sort(key=lambda c: c["match_pct"], reverse=True)
             for rank, c in enumerate(profile_jobs[:15], start=1):
                 ws.append([
-                    rank, pname, c["sheet"], c["title"], c["specialty"],
+                    rank, pname, c["sheet"], c["title"], c["specialty"], c["experience"],
                     c["hospital"], c["location"], c["state"], c["link"],
                     c["match_pct"], match_label(c["match_pct"]), c["status"], "", c["notes"],
                 ])

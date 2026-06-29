@@ -9,6 +9,7 @@ from job_utils import (
     JobRecord,
     contains_au_location,
     contains_non_au_location,
+    detect_experience_level,
     detect_specialty,
     detect_state,
     passes_filters,
@@ -109,9 +110,11 @@ def scrape_racp() -> list[JobRecord]:
             if not state and not location_match:
                 continue
 
+            combined = f"{title} {card_text}"
             job = JobRecord(
                 title=title[:200],
-                specialty=detect_specialty(f"{title} {card_text}"),
+                specialty=detect_specialty(combined),
+                experience_level=detect_experience_level(combined),
                 hospital=safe_str(section.find("strong")) or "RACP Member Hospital (AU)",
                 location=location_match.group(0) if location_match else (state or "Australia"),
                 state=state or "Australia",

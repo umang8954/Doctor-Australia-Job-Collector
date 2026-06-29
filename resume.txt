@@ -1,20 +1,40 @@
-# Doctor CV ù edit this file to improve Match % scoring
+# Doctor CV ? edit this file to improve Match % scoring
 
 ## Profile
-Medical Officer seeking Registrar / Senior Registrar roles in Australia.
+Medical Officer seeking Registrar / Senior Registrar / Consultant roles in Australia.
 
 ## Specialties
-- Obstetrics and Gynaecology
+- Obstetrics & Gynaecology
 - Paediatrics
 - Emergency Medicine
-- General Medicine
+- Internal Medicine / General Physician
+- General Surgery
+- Orthopaedics
+- Cardiology
+- Neurology
+- Oncology
+- Anaesthesia
+- Radiology
+- Psychiatry
+- Dermatology
+- Ophthalmology
+- ENT
+- Urology
+- Gastroenterology
+- Nephrology
+- Pulmonology
+- Endocrinology
+- Pathology
+- ICU / Intensive Care
 
 ## Experience Level
+- Medical Officer
+- Resident Doctor
+- Junior Doctor
 - Registrar
 - Senior Registrar
-- RMO (Resident Medical Officer)
-- PHO (Principal House Officer)
-- House Officer
+- Consultant
+- General Practitioner (GP)
 
 ## Preferred Locations (Australia only)
 - Victoria, Australia
@@ -26,8 +46,11 @@ Medical Officer seeking Registrar / Senior Registrar roles in Australia.
 - Tasmania, Australia
 
 ## Keywords
-registrar, senior registrar, consultant, medical officer, RMO, PHO, house officer,
-obstetrics, gynaecology, paediatrics, emergency medicine, general medicine
+medical officer, resident doctor, junior doctor, registrar, senior registrar, consultant,
+general practitioner, gp, general physician, internal medicine, emergency medicine, icu,
+general surgery, orthopaedics, cardiology, neurology, oncology, anaesthesia, radiology,
+psychiatry, paediatrics, obstetrics & gynaecology, dermatology, ophthalmology, ent,
+urology, gastroenterology, nephrology, pulmonology, endocrinology, pathology
 
 ## Qualifications
 - MBBS
