@@ -1,7 +1,7 @@
 # Daily Digest - 29-06-2026
 
 Profiles: Dr. Priya Sharma, Dr. James Chen, Dr. Ananya Patel, Dr. Michael O'Brien, Dr. Sarah Williams
-Today: **5 new** | **6 high match** | Apply Queue: 20
+Today: **0 new** | **6 high match** | Apply Queue: 20
 
 ## Top picks (best profile match)
 1. 2027 Emergency Medicine Medical Officer @ Western Health (VIC) - 83% [High Match] -> Dr. James Chen
