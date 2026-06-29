@@ -1,19 +1,19 @@
 {
   "portals": {
     "smartjobs_qld": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-29",
       "last_error": ""
     },
     "jobs_nt": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-29",
       "last_error": ""
     },
     "careers_vic": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-29",
       "last_error": ""
@@ -26,78 +26,89 @@
     },
     "western_health": {
       "zero_streak": 0,
-      "last_jobs": 8,
+      "last_jobs": 12,
       "last_run": "2026-06-29",
       "last_error": ""
     },
     "wa_health": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-29",
       "last_error": ""
     },
     "peninsula_health": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-29",
       "last_error": ""
     },
     "the_womens": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-29",
-      "last_error": ""
+      "last_error": "HTTPSConnectionPool(host='careers.thewomens.org.au', port=443): Max retries exceeded with url: /search/?q=registrar (Caused by ConnectTimeoutError(<HTTPSConnection(host='careers.thewomens.org.au', port=443) at 0x1b79381f890>, 'Connection to careers.thewomens.org.au timed out. (connect timeout=30)'))"
     },
     "grampians_health": {
       "zero_streak": 0,
-      "last_jobs": 8,
+      "last_jobs": 14,
       "last_run": "2026-06-29",
       "last_error": ""
     },
     "eastern_health": {
       "zero_streak": 0,
-      "last_jobs": 10,
+      "last_jobs": 12,
       "last_run": "2026-06-29",
       "last_error": ""
     },
     "rch": {
-      "zero_streak": 0,
-      "last_jobs": 7,
+      "zero_streak": 1,
+      "last_jobs": 0,
       "last_run": "2026-06-29",
-      "last_error": ""
+      "last_error": "HTTPSConnectionPool(host='careers.rch.org.au', port=443): Max retries exceeded with url: /search/?q=registrar (Caused by ConnectTimeoutError(<HTTPSConnection(host='careers.rch.org.au', port=443) at 0x1b79381fd90>, 'Connection to careers.rch.org.au timed out. (connect timeout=30)'))"
     },
     "ranzcog": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-29",
       "last_error": ""
     },
     "racp": {
       "zero_streak": 0,
-      "last_jobs": 4,
+      "last_jobs": 24,
       "last_run": "2026-06-29",
       "last_error": ""
     },
     "jobradars": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-29",
       "last_error": "403 Client Error: Forbidden for url: https://australia.jobradars.com/jobs?q=registrar+medical"
     },
     "pageup": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-29",
       "last_error": ""
     },
     "mercy_workday": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-29",
       "last_error": ""
     }
   },
-  "disabled": [],
+  "disabled": [
+    "careers_vic",
+    "jobradars",
+    "jobs_nt",
+    "mercy_workday",
+    "pageup",
+    "peninsula_health",
+    "ranzcog",
+    "smartjobs_qld",
+    "the_womens",
+    "wa_health"
+  ],
   "run_log": [
     {
       "date": "2026-06-29",
@@ -300,6 +311,118 @@
       "portal": "racp",
       "status": "ok",
       "jobs_found": 4,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "jobradars",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "403 Client Error: Forbidden for url: https://australia.jobradars.com/jobs?q=registrar+medical"
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "pageup",
+      "status": "ok",
+      "jobs_found": 0,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "mercy_workday",
+      "status": "ok",
+      "jobs_found": 0,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "smartjobs_qld",
+      "status": "ok",
+      "jobs_found": 0,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "jobs_nt",
+      "status": "ok",
+      "jobs_found": 0,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "careers_vic",
+      "status": "ok",
+      "jobs_found": 0,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "monash_health",
+      "status": "ok",
+      "jobs_found": 23,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "western_health",
+      "status": "ok",
+      "jobs_found": 12,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "wa_health",
+      "status": "ok",
+      "jobs_found": 0,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "peninsula_health",
+      "status": "ok",
+      "jobs_found": 0,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "the_womens",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "HTTPSConnectionPool(host='careers.thewomens.org.au', port=443): Max retries exceeded with url: /search/?q=registrar (Caused by ConnectTimeoutError(<HTTPSConnection(host='careers.thewomens.org.au', port=443) at 0x1b79381f890>, 'Connection to careers.thewomens.org.au timed out. (connect timeout=30)'))"
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "grampians_health",
+      "status": "ok",
+      "jobs_found": 14,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "eastern_health",
+      "status": "ok",
+      "jobs_found": 12,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "rch",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "HTTPSConnectionPool(host='careers.rch.org.au', port=443): Max retries exceeded with url: /search/?q=registrar (Caused by ConnectTimeoutError(<HTTPSConnection(host='careers.rch.org.au', port=443) at 0x1b79381fd90>, 'Connection to careers.rch.org.au timed out. (connect timeout=30)'))"
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "ranzcog",
+      "status": "ok",
+      "jobs_found": 0,
+      "error": ""
+    },
+    {
+      "date": "2026-06-29",
+      "portal": "racp",
+      "status": "ok",
+      "jobs_found": 24,
       "error": ""
     },
     {
