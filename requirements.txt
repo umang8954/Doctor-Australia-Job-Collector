@@ -1,0 +1,10 @@
+requests
+beautifulsoup4
+playwright
+openpyxl
+pandas
+python-dateutil
+lxml
+fake-useragent
+tenacity
+pypdf

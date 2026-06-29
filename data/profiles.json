@@ -1,0 +1,52 @@
+[
+  {
+    "id": "dr_og_registrar",
+    "name": "Dr. Priya Sharma",
+    "specialty": "Obstetrics and Gynaecology",
+    "experience_level": "Registrar",
+    "preferred_states": ["Victoria", "Queensland", "New South Wales"],
+    "keywords": ["registrar", "obstetrics", "gynaecology", "O&G", "medical officer"],
+    "source": "Demo_Medical_Resumes.pdf (page 1)",
+    "resume_text": "Obstetrics and Gynaecology Registrar. MBBS, AMC Part 1. Experience in antenatal care, labour ward, gynaecology surgery. Seeking Registrar role in Victoria or Queensland, Australia. RMO, PHO, house officer experience."
+  },
+  {
+    "id": "dr_emergency_rmo",
+    "name": "Dr. James Chen",
+    "specialty": "Emergency Medicine",
+    "experience_level": "RMO",
+    "preferred_states": ["Victoria", "Western Australia", "Northern Territory"],
+    "keywords": ["RMO", "resident medical officer", "emergency medicine", "ED", "medical officer"],
+    "source": "Demo_Medical_Resumes.pdf (page 2)",
+    "resume_text": "Emergency Medicine RMO / Resident Medical Officer. MBBS, ALS certified. Emergency department rotations. Seeking RMO or Registrar in Emergency Medicine across Australia. Victoria, WA preferred."
+  },
+  {
+    "id": "dr_paeds_registrar",
+    "name": "Dr. Ananya Patel",
+    "specialty": "Paediatrics",
+    "experience_level": "Registrar",
+    "preferred_states": ["Victoria", "New South Wales"],
+    "keywords": ["paediatrics", "registrar", "senior registrar", "RCH", "medical officer"],
+    "source": "Demo_Medical_Resumes.pdf (page 3)",
+    "resume_text": "Paediatrics Registrar. MBBS, DCH. Neonatal and general paediatrics experience. Seeking Registrar or Senior Registrar in Paediatrics in Melbourne or Sydney, Australia."
+  },
+  {
+    "id": "dr_gen_med_consultant",
+    "name": "Dr. Michael O'Brien",
+    "specialty": "General Medicine",
+    "experience_level": "Consultant",
+    "preferred_states": ["Queensland", "Western Australia", "Victoria"],
+    "keywords": ["consultant", "general medicine", "internal medicine", "physician", "staff specialist"],
+    "source": "Demo_Medical_Resumes.pdf (page 4)",
+    "resume_text": "General Medicine Consultant / Staff Specialist. FRACP eligible. Internal medicine and general medicine consultant roles. Queensland, Western Australia, Victoria, Australia."
+  },
+  {
+    "id": "dr_gen_med_pho",
+    "name": "Dr. Sarah Williams",
+    "specialty": "General Medicine",
+    "experience_level": "PHO",
+    "preferred_states": ["Victoria", "Northern Territory", "South Australia"],
+    "keywords": ["PHO", "principal house officer", "house officer", "general medicine", "medical officer"],
+    "source": "Demo_Medical_Resumes.pdf (page 5)",
+    "resume_text": "Principal House Officer PHO / House Officer. General medicine rotations. Seeking PHO, RMO, or House Officer roles in Victoria, NT, or SA hospitals in Australia."
+  }
+]

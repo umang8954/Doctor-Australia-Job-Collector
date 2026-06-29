@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Monash Health",
+    "url": "https://careers.monashhealth.org",
+    "state": "VIC",
+    "specialties": ["Emergency Medicine", "General Medicine", "Paediatrics"]
+  },
+  {
+    "name": "Western Health",
+    "url": "https://careers.wh.org.au",
+    "state": "VIC",
+    "specialties": ["Emergency Medicine", "General Medicine"]
+  },
+  {
+    "name": "WA Health",
+    "url": "https://medcareerswa.health.wa.gov.au",
+    "state": "WA",
+    "specialties": ["Emergency Medicine", "General Medicine", "Obstetrics"]
+  },
+  {
+    "name": "Peninsula Health",
+    "url": "https://careers.peninsulahealth.org.au",
+    "state": "VIC",
+    "specialties": ["General Medicine", "Emergency Medicine"]
+  },
+  {
+    "name": "The Royal Women's Hospital",
+    "url": "https://careers.thewomens.org.au",
+    "state": "VIC",
+    "specialties": ["Obstetrics", "Gynaecology", "Paediatrics"]
+  },
+  {
+    "name": "Grampians Health",
+    "url": "https://careers.grampianshealth.com",
+    "state": "VIC",
+    "specialties": ["General Medicine", "Emergency Medicine"]
+  },
+  {
+    "name": "Eastern Health",
+    "url": "https://careers.easternhealth.org.au",
+    "state": "VIC",
+    "specialties": ["General Medicine", "Psychiatry", "Emergency Medicine"]
+  },
+  {
+    "name": "Royal Children's Hospital",
+    "url": "https://careers.rch.org.au",
+    "state": "VIC",
+    "specialties": ["Paediatrics"]
+  },
+  {
+    "name": "Mercy Health",
+    "url": "https://mercyagedcare.wd105.myworkdayjobs.com",
+    "state": "VIC",
+    "specialties": ["General Medicine", "Aged Care"]
+  },
+  {
+    "name": "Queensland Health",
+    "url": "https://smartjobs.qld.gov.au",
+    "state": "QLD",
+    "specialties": ["Registrar", "Consultant", "RMO"]
+  }
+]
