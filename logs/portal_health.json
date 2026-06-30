@@ -1,22 +1,22 @@
 {
   "portals": {
     "smartjobs_qld": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-30",
       "last_error": "all_methods_failed"
     },
     "jobs_nt": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-30",
       "last_error": "all_methods_failed"
     },
     "careers_vic": {
-      "zero_streak": 0,
-      "last_jobs": 3,
+      "zero_streak": 1,
+      "last_jobs": 0,
       "last_run": "2026-06-30",
-      "last_error": ""
+      "last_error": "all_methods_failed"
     },
     "monash_health": {
       "zero_streak": 0,
@@ -37,7 +37,7 @@
       "last_error": ""
     },
     "peninsula_health": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-30",
       "last_error": "all_methods_failed"
@@ -67,7 +67,7 @@
       "last_error": ""
     },
     "ranzcog": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-30",
       "last_error": "all_methods_failed"
@@ -79,25 +79,33 @@
       "last_error": ""
     },
     "jobradars": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-30",
       "last_error": "all_methods_failed"
     },
     "pageup": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-30",
       "last_error": "all_methods_failed"
     },
     "mercy_workday": {
-      "zero_streak": 2,
+      "zero_streak": 3,
       "last_jobs": 0,
       "last_run": "2026-06-30",
       "last_error": "all_methods_failed"
     }
   },
-  "disabled": [],
+  "disabled": [
+    "jobradars",
+    "jobs_nt",
+    "mercy_workday",
+    "pageup",
+    "peninsula_health",
+    "ranzcog",
+    "smartjobs_qld"
+  ],
   "run_log": [
     {
       "date": "2026-06-29",
@@ -609,6 +617,118 @@
       "status": "ok",
       "jobs_found": 3,
       "error": ""
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "monash_health",
+      "status": "ok",
+      "jobs_found": 23,
+      "error": ""
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "western_health",
+      "status": "ok",
+      "jobs_found": 16,
+      "error": ""
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "wa_health",
+      "status": "ok",
+      "jobs_found": 25,
+      "error": ""
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "peninsula_health",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "all_methods_failed"
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "the_womens",
+      "status": "ok",
+      "jobs_found": 1,
+      "error": ""
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "grampians_health",
+      "status": "ok",
+      "jobs_found": 14,
+      "error": ""
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "eastern_health",
+      "status": "ok",
+      "jobs_found": 11,
+      "error": ""
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "rch",
+      "status": "ok",
+      "jobs_found": 7,
+      "error": ""
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "ranzcog",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "all_methods_failed"
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "racp",
+      "status": "ok",
+      "jobs_found": 24,
+      "error": ""
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "jobradars",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "all_methods_failed"
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "pageup",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "all_methods_failed"
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "mercy_workday",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "all_methods_failed"
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "smartjobs_qld",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "all_methods_failed"
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "jobs_nt",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "all_methods_failed"
+    },
+    {
+      "date": "2026-06-30",
+      "portal": "careers_vic",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "all_methods_failed"
     },
     {
       "date": "2026-06-30",
