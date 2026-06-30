@@ -282,6 +282,19 @@ DATE_FILTER_DAYS = 7
 
 HIGH_MATCH_THRESHOLD = 70
 
+# --- Validation (Phases 2 & 3) ---
+# Job boards do not expose doctor license numbers; experience level used instead.
+VALIDATION_WEIGHTS = {
+    "title_relevance": 0.40,
+    "specialty": 0.25,
+    "location": 0.20,
+    "experience": 0.15,
+}
+
+VALIDATION_CONFIDENCE_THRESHOLD = 30  # 0–100; jobs below this are flagged
+
+VALIDATION_FILTER_BELOW_THRESHOLD = False  # True = drop jobs below threshold
+
 FOLLOW_UP_AFTER_DAYS = 7
 
 PORTAL_ZERO_STREAK_DISABLE = 3
@@ -317,6 +330,12 @@ RETRY_DELAY_SECONDS = 5
 
 PLAYWRIGHT_WAIT_MS = 4000
 
+PORTAL_PLAYWRIGHT_WAIT_MS = {
+    "peninsula_health": 8000,
+    "wa_health": 8000,
+    "careers_vic": 6000,
+}
+
 # --- Excel ---
 
 SHEET_COLUMNS = [
@@ -333,6 +352,9 @@ SHEET_COLUMNS = [
     "Portal",
     "Best Profile",
     "Match %",
+    "Extraction Method Used",
+    "Method Reliability Note",
+    "Validation Flags",
     "Status",
     "Applied?",
     "Notes",
@@ -397,6 +419,9 @@ APPLY_QUEUE_COLUMNS = [
     "State",
     "Apply Link",
     "Match %",
+    "Extraction Method Used",
+    "Method Reliability Note",
+    "Validation Flags",
     "Match Label",
     "Status",
     "Applied?",
@@ -489,7 +514,7 @@ PORTAL_CONFIG = {
 
         "base_url": "https://careers.vic.gov.au",
 
-        "search_url": "https://careers.vic.gov.au/job-search?keyword=registrar",
+        "search_url": "https://careers.vic.gov.au/jobs?keywords=registrar+medical",
 
         "method": "playwright",
 
@@ -537,7 +562,7 @@ PORTAL_CONFIG = {
 
         "base_url": "https://medcareerswa.health.wa.gov.au",
 
-        "search_url": "https://medcareerswa.health.wa.gov.au/search/?q=registrar",
+        "search_url": "https://medcareerswa.health.wa.gov.au/jobs/search?q=registrar",
 
         "method": "playwright",
 
@@ -551,11 +576,11 @@ PORTAL_CONFIG = {
 
         "sheet": "Mercy_Workday",
 
-        "base_url": "https://mercyagedcare.wd105.myworkdayjobs.com",
+        "base_url": "https://mercyhealth.mercury.com.au",
 
-        "search_url": "https://mercyagedcare.wd105.myworkdayjobs.com/wday/cxs/mercyagedcare/MercyCare/jobs",
+        "search_url": "https://mercyhealth.mercury.com.au/SearchResults.aspx",
 
-        "method": "workday",
+        "method": "mercury",
 
         "state": "VIC",
 
@@ -564,6 +589,8 @@ PORTAL_CONFIG = {
         "tenant": "mercyagedcare",
 
         "site": "MercyCare",
+
+        "workday_fallback_url": "https://mercyagedcare.wd105.myworkdayjobs.com",
 
     },
 
@@ -575,7 +602,7 @@ PORTAL_CONFIG = {
 
         "search_url": "https://careers.peninsulahealth.org.au/search/?q=registrar",
 
-        "method": "static",
+        "method": "playwright",
 
         "state": "VIC",
 

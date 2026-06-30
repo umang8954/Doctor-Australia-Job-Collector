@@ -38,6 +38,9 @@ class JobRecord:
     notes: str = ""
     match_pct: int = 0
     match_label: str = ""
+    extraction_method: str = ""
+    method_reliability_note: str = ""
+    validation_flags: str = ""
 
     def combined_text(self) -> str:
         return (

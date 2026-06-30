@@ -1,0 +1,100 @@
+﻿
+=== smartjobs_qld ===
+  status: ok
+  url: https://smartjobs.qld.gov.au/jobs/search?keyword=medical+officer
+  method: playwright
+  html_len: 4637
+  job_links: 0
+  card_selectors: 0
+  no_results: False
+  sample_links: []
+  title_snippet: 
+
+=== jobs_nt ===
+  status: ok
+  url: https://jobs.nt.gov.au/jobs?search=medical+officer
+  method: playwright
+  html_len: 87484
+  job_links: 2
+  card_selectors: 0
+  no_results: True
+  sample_links: ['https://nt.gov.au/employ/for-employees-in-nt/looking-for-work/northern-territory-government-jobs', 'https://ocpe.nt.gov.au/nt-public-sector-employment/Information-about-ntps-employment/applying-for-and-filling-jobs/information-for-applicants']
+  title_snippet: Jobs - Search
+
+=== careers_vic ===
+  status: ok
+  url: https://careers.vic.gov.au/job-search?keyword=registrar
+  method: playwright
+  html_len: 64164
+  job_links: 6
+  card_selectors: 0
+  no_results: False
+  sample_links: ['/jobs?keywords=', '/jobs?keywords=', '/how-to-apply', '/how-to-apply/how-to-apply-for-a-job', '/how-to-apply/how-to-prepare-for-an-interview']
+  title_snippet: 404 - Page not found | Careers Vic
+
+=== wa_health ===
+  status: ok
+  url: https://medcareerswa.health.wa.gov.au/search/?q=registrar
+  method: playwright
+  html_len: 78353
+  job_links: 5
+  card_selectors: 0
+  no_results: False
+  sample_links: ['/jobs/search', '/how-to-apply', '/jobs/search', '/how-to-apply', '/jobs/search']
+  title_snippet: Page not found
+
+=== peninsula_health ===
+  status: ok
+  url: https://careers.peninsulahealth.org.au/search/?q=registrar
+  method: static
+  html_len: 52912
+  job_links: 0
+  card_selectors: 0
+  no_results: False
+  sample_links: []
+  title_snippet: Registrar - Bayside Health Peninsula Jobs
+
+=== peninsula_health_pw ===
+  status: ok
+  url: https://careers.peninsulahealth.org.au/search/?q=registrar
+  method: playwright
+  html_len: 91022
+  job_links: 10
+  card_selectors: 0
+  no_results: False
+  sample_links: ['/job/2026-O&amp;G-Un-accredited-Registrar-Sandringham/5136-en_GB', '/job/2027-O&amp;G-Un-Accredited-Registrar/5696-en_GB', '/job/2027-RANZCOG-Accredited-Advanced-O&amp;G-Registrar/5802-en_GB', '/job/2027-BPT23-%28PGY3%2B%29-Registrar/5544-en_GB', '/job/2027-ICU-Registrar/5673-en_GB']
+  title_snippet: Registrar - Bayside Health Peninsula Jobs
+
+=== the_womens ===
+  status: ok
+  url: https://careers.thewomens.org.au/search/?q=registrar
+  method: static
+  html_len: 111794
+  job_links: 3
+  card_selectors: 0
+  no_results: False
+  sample_links: ['https://theroyalwo.jobs2web.com/search/?q=&', 'https://theroyalwo.jobs2web.com/search/?q=&', 'https://career10.successfactors.com/career?company=theroyalwo&site=&lang=en_GB&requestParams=vZw7rJXi%2bMPbM4FDPbMFyhGXeq142n2R0WpTQRCG1zSxiRWpFLzz5lyHYLRJSLzQ2NIaqCBYC1Lk%0auGfPpGebze46O9skhPpE%2bhDiE%2bilLyBe%2bAw6UaFJLS7sws78O9%2fMv%2b9%2fiEpAcftUnslGJG0aT2Uo%0anklfWf%2f68dOdN5%2fXRGlP3DBO5ntSkcOBqFGBEApn8ql%2f9Fgs1s1Jlc9N3hskykETRBRbxwe%2fqxpp%0aTxovCLU9efjhy9G373fn%2byUhpp7l10gIElVlNFga5PGteCfW%2fsSrpy4L9yeQkdgITmlp%2bt6b2bKk%0aMpQmAOdZ%2blx7MNrCcv76rkZQROKWcohgJGln00uYVne786DZvscqHQaWAK00LwPgVaR15cZe2osu%0aSkynAtDNpJm43cu3mpIIgKkNy9VqIWZBoc64YnlhzwoKbLr%2fhMQmWzzpG0DaQZAEK12XCSM%2f3sLx%0aKI3ca%2boRhoBg1YoBP%2bfJMFq1GFuaHedGGkLSO54nf8dIeskrFw9jBkk9UQWoEeRJr3leX1Yc6TG4%0a1fzreuIBhw7HkokXhTku8zNuWQf%2b7auB%2fTw%2fLHT4D%2fBAWw4P7D9M5aIlnNHMA8ucJ73Q5GwOTD1%2f%0aNaOanVa72e62Otvdbud8%2bgtHIeF1&career_ns=subscribe&jobPipeline=Direct&clientId=jobs2web&_s.crb=x40SCZ2Mj4EInExtqPw0BNwTOgNQ6MZVvrVgQ%2fTH0Zc%3d']
+  title_snippet: Registrar - theroyalwo Jobs
+
+=== ranzcog ===
+  status: ok
+  url: https://jobs.ranzcog.edu.au/jobs
+  method: playwright
+  html_len: 144
+  job_links: 0
+  card_selectors: 0
+  no_results: False
+  sample_links: []
+  title_snippet: 403 Forbidden
+
+=== jobradars ===
+  status: error
+  error: 403 Client Error: Forbidden for url: https://australia.jobradars.com/jobs?q=registrar+medical
+
+=== mercy_workday ===
+  status: error
+  error: 404 Client Error: Not Found for url: https://mercyagedcare.wd105.myworkdayjobs.com/wday/cxs/mercyagedcare/MercyCare/jobs
+
+=== pageup ===
+  status: ok
+  sites: [{'url': 'https://careers.slhd.nsw.gov.au/careers/search/?q=registrar', 'error': 'HTTPSConnectionPool(host=\'careers.slhd.nsw.gov.au\', port=443): Max retries exceeded with url: /careers/search/?q=registrar (Caused by NameResolutionError("HTTPSConnection(host=\'careers.slhd.nsw.gov.au\', port=443): Failed to resolve \'careers.slhd.nsw.gov.au\' ([Errno 11001] getaddrinfo failed)"))'}, {'url': 'https://careers.health.qld.gov.au/search/?q=medical+officer', 'error': '403 Client Error: Forbidden for url: https://careers.health.qld.gov.au/search/?q=medical+officer'}, {'url': 'https://careers.sahealth.sa.gov.au/search/?q=registrar', 'html_len': 110524, 'apply_links': 3, 'samples': ['https://secure.dc2.pageuppeople.com/apply/532/aw/applicationForm', 'https://secure.dc2.pageuppeople.com/apply/532/aw/applicationForm', 'https://secure.dc2.pageuppeople.com/apply/532/aw/applicationForm/default.asp']}]

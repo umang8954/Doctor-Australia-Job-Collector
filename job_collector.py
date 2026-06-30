@@ -14,15 +14,19 @@ import sys
 
 import config
 from excel_manager import ExcelManager
+from extraction_runner import extract_jobs_multi_method
 from job_utils import RunLogger, now_aest, passes_filters
+from job_validator import apply_validation_to_job
 from phase2_processor import run_phase2_post_process
-from portal_health import get_health_summary, is_portal_disabled, record_portal_run
+from portal_health import get_health_summary, is_portal_disabled, record_portal_run, reset_disabled_portals
+from profile_loader import load_profiles
 from scrapers import ALL_SCRAPERS
 
 
 def run_all_scrapers(logger: RunLogger) -> dict[str, dict]:
     """Run each enabled portal; one failure must not stop others."""
     results: dict[str, dict] = {}
+    profiles = load_profiles()
 
     for portal_key, scrape_fn in ALL_SCRAPERS.items():
         cfg = config.PORTAL_CONFIG.get(portal_key, {})
@@ -40,17 +44,24 @@ def run_all_scrapers(logger: RunLogger) -> dict[str, dict]:
 
         try:
             logger.log(f"{portal_key}: scraping ({method})...")
-            raw_jobs = scrape_fn()
-            filtered = [j for j in raw_jobs if passes_filters(j)]
+            outcome = extract_jobs_multi_method(portal_key, scrape_fn, logger)
+            raw_jobs = outcome.jobs
+            filtered = []
+            for job in raw_jobs:
+                if not passes_filters(job):
+                    continue
+                if apply_validation_to_job(job, profiles):
+                    filtered.append(job)
             logger.log(
-                f"{portal_key}: {len(raw_jobs)} raw -> {len(filtered)} kept (Australia-only)"
+                f"{portal_key}: {len(raw_jobs)} raw -> {len(filtered)} kept "
+                f"(via {outcome.method_used}; Australia + validation)"
             )
-            record_portal_run(portal_key, len(filtered))
+            record_portal_run(portal_key, len(filtered), error=outcome.error)
             results[portal_key] = {
                 "jobs": filtered,
-                "error": "",
+                "error": outcome.error,
                 "sheet": sheet,
-                "method": method,
+                "method": outcome.method_used or method,
             }
         except Exception as exc:  # noqa: BLE001
             err = str(exc)
@@ -80,6 +91,10 @@ def main() -> int:
     logger = RunLogger()
     logger.log("=== Doctor Job Collector run started ===")
 
+    reenabled = reset_disabled_portals()
+    if reenabled:
+        logger.log(f"Re-enabled auto-disabled portals: {', '.join(reenabled)}")
+
     excel = ExcelManager()
     total_new = 0
     stats: dict[str, int] = {}
@@ -101,6 +116,9 @@ def main() -> int:
 
     logger.log("Updating Status column...")
     excel.update_sheet_statuses()
+
+    logger.log("Re-validating all jobs (Match %, profiles, flags)...")
+    excel.revalidate_all_jobs()
 
     try:
         run_phase2_post_process(excel, total_new, logger)

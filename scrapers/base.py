@@ -95,7 +95,8 @@ def fetch_with_playwright(url: str, label: str = "playwright", wait_ms: int | No
     from playwright.sync_api import sync_playwright
 
     polite_delay()
-    wait = wait_ms or config.PLAYWRIGHT_WAIT_MS
+    if wait_ms is None:
+        wait_ms = config.PORTAL_PLAYWRIGHT_WAIT_MS.get(label, config.PLAYWRIGHT_WAIT_MS)
     try:
         ua = _ua.random
     except Exception:  # noqa: BLE001
@@ -106,7 +107,7 @@ def fetch_with_playwright(url: str, label: str = "playwright", wait_ms: int | No
         context = browser.new_context(user_agent=ua, locale="en-AU")
         page = context.new_page()
         page.goto(url, wait_until="domcontentloaded", timeout=60000)
-        page.wait_for_timeout(wait)
+        page.wait_for_timeout(wait_ms)
         html = page.content()
         browser.close()
     return html

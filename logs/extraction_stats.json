@@ -1,0 +1,606 @@
+{
+  "portals": {
+    "monash_health": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 23,
+              "seconds": 15.08,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 23,
+              "seconds": 13.29,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 23,
+              "seconds": 10.84,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 23,
+              "seconds": 11.41,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    },
+    "western_health": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "static",
+              "jobs": 16,
+              "seconds": 5.37,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static",
+              "jobs": 16,
+              "seconds": 6.07,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static",
+              "jobs": 16,
+              "seconds": 8.0,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 16,
+              "seconds": 6.63,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 16,
+              "seconds": 6.63,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    },
+    "peninsula_health": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "static",
+              "jobs": 0,
+              "seconds": 4.66,
+              "error": ""
+            },
+            {
+              "method": "playwright",
+              "jobs": 8,
+              "seconds": 16.37,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static",
+              "jobs": 0,
+              "seconds": 6.63,
+              "error": ""
+            },
+            {
+              "method": "playwright",
+              "jobs": 8,
+              "seconds": 18.14,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 6.09,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 4.02,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 5.08,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 5.01,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    },
+    "grampians_health": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "static",
+              "jobs": 14,
+              "seconds": 6.66,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 14,
+              "seconds": 7.77,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 14,
+              "seconds": 6.45,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    },
+    "eastern_health": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "static",
+              "jobs": 11,
+              "seconds": 6.05,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 11,
+              "seconds": 5.87,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 11,
+              "seconds": 4.41,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    },
+    "rch": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "static",
+              "jobs": 7,
+              "seconds": 6.54,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 7,
+              "seconds": 6.31,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 7,
+              "seconds": 4.9,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    },
+    "racp": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "static",
+              "jobs": 24,
+              "seconds": 4.76,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 24,
+              "seconds": 4.62,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 24,
+              "seconds": 6.87,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    },
+    "smartjobs_qld": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 10.93,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 6.08,
+              "error": "404 Client Error: Not Found for url: https://smartjobs.qld.gov.au/jobtools/search?keyword=medical+officer"
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 9.09,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 6.31,
+              "error": "404 Client Error: Not Found for url: https://smartjobs.qld.gov.au/jobtools/search?keyword=medical+officer"
+            }
+          ]
+        }
+      ]
+    },
+    "jobs_nt": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 15.91,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 5.81,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 18.39,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 4.32,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    },
+    "careers_vic": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 3,
+              "seconds": 15.76,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 3,
+              "seconds": 39.48,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    },
+    "wa_health": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 25,
+              "seconds": 17.68,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 25,
+              "seconds": 16.49,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    },
+    "the_womens": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 6.09,
+              "error": ""
+            },
+            {
+              "method": "playwright",
+              "jobs": 1,
+              "seconds": 14.09,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 6.84,
+              "error": ""
+            },
+            {
+              "method": "playwright",
+              "jobs": 1,
+              "seconds": 15.89,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    },
+    "ranzcog": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 12.17,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 5.41,
+              "error": "403 Client Error: Forbidden for url: https://jobs.ranzcog.edu.au/jobs"
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 10.72,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 4.53,
+              "error": "403 Client Error: Forbidden for url: https://jobs.ranzcog.edu.au/jobs"
+            }
+          ]
+        }
+      ]
+    },
+    "jobradars": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 4.54,
+              "error": "403 Client Error: Forbidden for url: https://australia.jobradars.com/jobs?q=registrar+medical"
+            },
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 13.33,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 3.6,
+              "error": "403 Client Error: Forbidden for url: https://australia.jobradars.com/jobs?q=registrar+medical"
+            },
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 12.12,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    },
+    "pageup": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "pageup_html",
+              "jobs": 0,
+              "seconds": 18.75,
+              "error": ""
+            },
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 4.62,
+              "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://careers.slhd.nsw.gov.au/careers/search/?q=registrar\nCall log:\n  - navigating to \"https://careers.slhd.nsw.gov.au/careers/search/?q=registrar\", waiting "
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "pageup_html",
+              "jobs": 0,
+              "seconds": 14.98,
+              "error": ""
+            },
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 4.9,
+              "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://careers.slhd.nsw.gov.au/careers/search/?q=registrar\nCall log:\n  - navigating to \"https://careers.slhd.nsw.gov.au/careers/search/?q=registrar\", waiting "
+            }
+          ]
+        }
+      ]
+    },
+    "mercy_workday": {
+      "runs": [
+        {
+          "methods": [
+            {
+              "method": "mercury_html",
+              "jobs": 0,
+              "seconds": 24.13,
+              "error": "HTTPSConnectionPool(host='mercyhealth.mercury.com.au', port=443): Max retries exceeded with url: /SearchResults.aspx (Caused by ConnectTimeoutError(<HTTPSConnection(host='mercyhealth.mercury.com.au', "
+            },
+            {
+              "method": "workday_api",
+              "jobs": 0,
+              "seconds": 19.35,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "mercury_html",
+              "jobs": 0,
+              "seconds": 24.97,
+              "error": "HTTPSConnectionPool(host='mercyhealth.mercury.com.au', port=443): Max retries exceeded with url: /SearchResults.aspx (Caused by ConnectTimeoutError(<HTTPSConnection(host='mercyhealth.mercury.com.au', "
+            },
+            {
+              "method": "workday_api",
+              "jobs": 0,
+              "seconds": 19.33,
+              "error": ""
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

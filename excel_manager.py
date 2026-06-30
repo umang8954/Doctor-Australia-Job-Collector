@@ -13,8 +13,9 @@ from openpyxl.worksheet.worksheet import Worksheet
 
 import config
 from job_utils import JobRecord, dedup_key, detect_experience_level, format_date, format_dt, now_aest, parse_added_on
+from job_validator import score_job_validation, validate_job_against_profiles
 from profile_loader import load_profiles, profile_summary_rows
-from resume_matcher import match_label, score_all_profiles, score_job_for_profile
+from resume_matcher import match_label
 
 
 class ExcelManager:
@@ -112,8 +113,33 @@ class ExcelManager:
                     level = detect_experience_level(f"{title} {specialty}")
                     if level:
                         ws.cell(row, insert_at, level)
+            for col in ("Extraction Method Used", "Method Reliability Note", "Validation Flags"):
+                if col not in headers:
+                    insert_at = headers.index("Match %") + 1 if "Match %" in headers else ws.max_column + 1
+                    ws.insert_cols(insert_at)
+                    ws.cell(1, insert_at, col)
+                    changed = True
+                    headers = [ws.cell(1, c).value for c in range(1, ws.max_column + 1)]
+            changed = self._reorder_columns_to_config(ws) or changed
         if changed:
             wb.save(self.path)
+
+    def _reorder_columns_to_config(self, ws: Worksheet) -> bool:
+        """Fix column order when headers are present but misaligned with SHEET_COLUMNS."""
+        headers = [ws.cell(1, c).value for c in range(1, ws.max_column + 1)]
+        if headers == config.SHEET_COLUMNS:
+            return False
+        if set(headers) != set(config.SHEET_COLUMNS):
+            return False
+        rows_data: list[list] = []
+        for row in range(2, ws.max_row + 1):
+            row_dict = {headers[i]: ws.cell(row, i + 1).value for i in range(len(headers))}
+            rows_data.append([row_dict.get(col) for col in config.SHEET_COLUMNS])
+        ws.delete_rows(1, ws.max_row)
+        ws.append(config.SHEET_COLUMNS)
+        for rd in rows_data:
+            ws.append(rd)
+        return True
 
     def refresh_profiles_sheet(self) -> None:
         ws = self._ensure_custom_sheet(config.PROFILES_SHEET, config.PROFILES_COLUMNS)
@@ -165,19 +191,20 @@ class ExcelManager:
             return 0
         return max(0, self.wb[sheet].max_row - 1)
 
-    def _score_job(self, job: JobRecord, portal_sheet: str) -> tuple[str, str, int]:
+    def _score_job(self, job: JobRecord, portal_sheet: str) -> tuple[str, str, int, str]:
         if not self.profiles:
-            return ("", "", job.match_pct or 0)
-        scored = score_all_profiles(
+            return ("", "", job.match_pct or 0, "")
+        result = validate_job_against_profiles(
             self.profiles,
             job.title,
             job.description,
             job.specialty,
             job.location,
             job.state,
+            job.experience_level,
         )
-        best = scored[0]
-        return (best["profile_id"], best["profile_name"], best["match_pct"])
+        flags = "; ".join(result.flags)
+        return (result.profile_id, result.profile_name, result.match_pct, flags)
 
     def add_jobs(self, sheet: str, jobs: list[JobRecord]) -> int:
         ws = self._ensure_sheet(sheet)
@@ -193,7 +220,7 @@ class ExcelManager:
             key = dedup_key(job.hospital, job.title)
             posted_str = format_date(job.posted_date) if job.posted_date else format_date(now_aest())
 
-            profile_id, profile_name, match_pct = self._score_job(job, sheet)
+            profile_id, profile_name, match_pct, val_flags = self._score_job(job, sheet)
             if job.match_pct and job.match_pct > match_pct:
                 match_pct = job.match_pct
 
@@ -201,14 +228,24 @@ class ExcelManager:
             notes = job.notes or ""
             if label == "High Match" and "High Match" not in notes:
                 notes = f"High Match | {notes}".strip(" |")
+            validation_flags = job.validation_flags or val_flags
+            extract_method = job.extraction_method or ""
+            reliability = job.method_reliability_note or ""
 
             if key in self._index[sheet]:
                 row_num, old_link = self._index[sheet][key]
                 if job.apply_link and job.apply_link != old_link:
                     ws.cell(row_num, self.COL_MAP["Apply Link"], job.apply_link)
                 ws.cell(row_num, self.COL_MAP["Best Profile"], profile_name)
-                ws.cell(row_num, self.COL_MAP["Match %"], match_pct)
                 ws.cell(row_num, self.COL_MAP["Portal"], sheet)
+                if "Validation Flags" in self.COL_MAP:
+                    ws.cell(row_num, self.COL_MAP["Validation Flags"], validation_flags)
+                if "Match %" in self.COL_MAP:
+                    ws.cell(row_num, self.COL_MAP["Match %"], match_pct)
+                if "Extraction Method Used" in self.COL_MAP:
+                    ws.cell(row_num, self.COL_MAP["Extraction Method Used"], extract_method)
+                if "Method Reliability Note" in self.COL_MAP:
+                    ws.cell(row_num, self.COL_MAP["Method Reliability Note"], reliability)
                 self._index[sheet][key] = (row_num, job.apply_link)
                 continue
 
@@ -226,6 +263,9 @@ class ExcelManager:
                 sheet,
                 profile_name,
                 match_pct,
+                extract_method,
+                reliability,
+                validation_flags,
                 config.STATUS_NEW,
                 "",
                 notes,
@@ -279,12 +319,15 @@ class ExcelManager:
                     f"{safe_cell(src, row, 'Experience Level', self.COL_MAP)} {hospital}"
                 )
                 for p in self.profiles:
-                    pct = score_job_for_profile(
-                        p, str(title), desc,
+                    pct = score_job_validation(
+                        p,
+                        str(title),
+                        desc,
                         str(safe_cell(src, row, "Specialty", self.COL_MAP)),
                         str(safe_cell(src, row, "Location", self.COL_MAP)),
                         str(state),
-                    )
+                        str(safe_cell(src, row, "Experience Level", self.COL_MAP)),
+                    ).match_pct
                     row_data.append(pct)
                 ws.append(row_data)
                 count += 1
@@ -371,6 +414,9 @@ class ExcelManager:
                     "state": safe_cell(ws, row, "State", self.COL_MAP),
                     "link": safe_cell(ws, row, "Apply Link", self.COL_MAP),
                     "match_pct": match_pct,
+                    "extract_method": safe_cell(ws, row, "Extraction Method Used", self.COL_MAP),
+                    "reliability": safe_cell(ws, row, "Method Reliability Note", self.COL_MAP),
+                    "val_flags": safe_cell(ws, row, "Validation Flags", self.COL_MAP),
                     "status": status,
                     "notes": safe_cell(ws, row, "Notes", self.COL_MAP),
                 })
@@ -389,6 +435,9 @@ class ExcelManager:
                 c["state"],
                 c["link"],
                 c["match_pct"],
+                c.get("extract_method", ""),
+                c.get("reliability", ""),
+                c.get("val_flags", ""),
                 match_label(c["match_pct"]),
                 c["status"],
                 "",
@@ -414,8 +463,37 @@ class ExcelManager:
                 ws.append([
                     rank, pname, c["sheet"], c["title"], c["specialty"], c["experience"],
                     c["hospital"], c["location"], c["state"], c["link"],
-                    c["match_pct"], match_label(c["match_pct"]), c["status"], "", c["notes"],
+                    c["match_pct"],
+                    c.get("extract_method", ""),
+                    c.get("reliability", ""),
+                    c.get("val_flags", ""),
+                    match_label(c["match_pct"]), c["status"], "", c["notes"],
                 ])
+
+    def revalidate_all_jobs(self) -> int:
+        """Re-score every job row using job_validator (Phases 2 & 3)."""
+        updated = 0
+        for sheet in config.ALL_JOB_SOURCE_SHEETS:
+            if sheet not in self.wb.sheetnames:
+                continue
+            ws = self.wb[sheet]
+            for row in range(2, ws.max_row + 1):
+                title = safe_cell(ws, row, "Job Title", self.COL_MAP)
+                if not title:
+                    continue
+                specialty = safe_cell(ws, row, "Specialty", self.COL_MAP)
+                experience = safe_cell(ws, row, "Experience Level", self.COL_MAP)
+                location = safe_cell(ws, row, "Location", self.COL_MAP)
+                state = safe_cell(ws, row, "State", self.COL_MAP)
+                result = validate_job_against_profiles(
+                    self.profiles, title, "", specialty, location, state, experience
+                )
+                ws.cell(row, self.COL_MAP["Best Profile"], result.profile_name)
+                ws.cell(row, self.COL_MAP["Match %"], result.match_pct)
+                if "Validation Flags" in self.COL_MAP:
+                    ws.cell(row, self.COL_MAP["Validation Flags"], "; ".join(result.flags))
+                updated += 1
+        return updated
 
     def get_follow_up_jobs(self) -> list[dict]:
         follow_ups: list[dict] = []

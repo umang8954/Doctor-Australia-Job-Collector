@@ -1,7 +1,8 @@
 """
-Score jobs against one or more doctor profiles.
+Score jobs against doctor profiles — delegates to job_validator (Phases 2 & 3).
 
-Weights per profile: Specialty 40% + Location 20% + Experience level 20% + Keywords 20%
+Match % weights (see job_validator.py):
+  Title/role relevance 40% | Specialty 25% | Location 20% | Experience 15%
 Match % >= 70 -> High Match
 """
 
@@ -55,28 +56,14 @@ def score_job_for_profile(
     specialty: str = "",
     location: str = "",
     state: str = "",
+    experience_level: str = "",
 ) -> int:
-    tokens = _profile_tokens(profile)
-    text = f"{title} {description} {specialty} {location} {state}".lower()
-    if not text.strip():
-        return 0
+    """Delegate to job_validator for consistent Match % (Phases 2 & 3)."""
+    from job_validator import score_job_validation
 
-    specialty_score = _score_category(text, tokens["specialties"])
-    if specialty and specialty.lower() in (profile.get("resume_text") or "").lower():
-        specialty_score = max(specialty_score, 0.85)
-
-    location_text = f"{location} {state} {' '.join(tokens['locations'])}".lower()
-    location_score = _score_category(location_text + " " + text, tokens["locations"])
-    level_score = _score_category(text, tokens["levels"])
-    keyword_score = _score_category(text, tokens["keywords"])
-
-    total = (
-        specialty_score * 0.40
-        + location_score * 0.20
-        + level_score * 0.20
-        + keyword_score * 0.20
-    )
-    return min(100, max(0, int(round(total * 100))))
+    return score_job_validation(
+        profile, title, description, specialty, location, state, experience_level
+    ).match_pct
 
 
 def score_all_profiles(
@@ -89,7 +76,9 @@ def score_all_profiles(
 ) -> list[dict[str, Any]]:
     scored = []
     for profile in profiles:
-        pct = score_job_for_profile(profile, title, description, specialty, location, state)
+        pct = score_job_for_profile(
+            profile, title, description, specialty, location, state, experience_level=""
+        )
         scored.append({
             "profile_id": profile.get("id", ""),
             "profile_name": profile.get("name", ""),
