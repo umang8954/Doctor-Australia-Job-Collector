@@ -51,6 +51,16 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 24,
+              "seconds": 9.41,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -112,6 +122,16 @@
               "method": "static_html",
               "jobs": 16,
               "seconds": 4.49,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 18,
+              "seconds": 5.6,
               "error": ""
             }
           ]
@@ -199,6 +219,22 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 3.63,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 4.95,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -240,6 +276,16 @@
               "method": "static_html",
               "jobs": 14,
               "seconds": 6.02,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 13,
+              "seconds": 5.98,
               "error": ""
             }
           ]
@@ -287,6 +333,16 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 10,
+              "seconds": 5.0,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -331,6 +387,16 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 8,
+              "seconds": 4.84,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -372,6 +438,16 @@
               "method": "static_html",
               "jobs": 24,
               "seconds": 3.22,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 24,
+              "seconds": 5.49,
               "error": ""
             }
           ]
@@ -427,6 +503,22 @@
               "error": "404 Client Error: Not Found for url: https://smartjobs.qld.gov.au/jobtools/search?keyword=medical+officer"
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 8.6,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 3.89,
+              "error": "404 Client Error: Not Found for url: https://smartjobs.qld.gov.au/jobtools/search?keyword=medical+officer"
+            }
+          ]
         }
       ]
     },
@@ -479,6 +571,22 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 21.27,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 5.97,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -519,6 +627,22 @@
               "error": "403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 11.29,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 4.89,
+              "error": "403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
+            }
+          ]
         }
       ]
     },
@@ -550,6 +674,16 @@
               "method": "playwright",
               "jobs": 25,
               "seconds": 14.26,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 25,
+              "seconds": 16.29,
               "error": ""
             }
           ]
@@ -605,6 +739,22 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 3.31,
+              "error": ""
+            },
+            {
+              "method": "playwright",
+              "jobs": 1,
+              "seconds": 15.21,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -654,6 +804,22 @@
               "method": "static_html",
               "jobs": 0,
               "seconds": 3.54,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 7.97,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 4.53,
               "error": ""
             }
           ]
@@ -709,6 +875,22 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 4.13,
+              "error": "403 Client Error: Forbidden for url: https://australia.jobradars.com/jobs?q=registrar+medical"
+            },
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 12.18,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -761,6 +943,22 @@
               "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://careers.slhd.nsw.gov.au/careers/search/?q=registrar\nCall log:\n  - navigating to \"https://careers.slhd.nsw.gov.au/careers/search/?q=registrar\", waiting "
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "pageup_html",
+              "jobs": 0,
+              "seconds": 16.88,
+              "error": ""
+            },
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 3.78,
+              "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://careers.slhd.nsw.gov.au/careers/search/?q=registrar\nCall log:\n  - navigating to \"https://careers.slhd.nsw.gov.au/careers/search/?q=registrar\", waiting "
+            }
+          ]
         }
       ]
     },
@@ -810,6 +1008,22 @@
               "method": "workday_api",
               "jobs": 0,
               "seconds": 14.27,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "mercury_html",
+              "jobs": 0,
+              "seconds": 49.88,
+              "error": "HTTPSConnectionPool(host='mercyhealth.mercury.com.au', port=443): Max retries exceeded with url: /SearchResults.aspx (Caused by ConnectTimeoutError(<HTTPSConnection(host='mercyhealth.mercury.com.au', "
+            },
+            {
+              "method": "workday_api",
+              "jobs": 0,
+              "seconds": 17.51,
               "error": ""
             }
           ]
