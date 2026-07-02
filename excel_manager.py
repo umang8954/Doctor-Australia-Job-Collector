@@ -82,6 +82,19 @@ class ExcelManager:
             if name not in wb.sheetnames:
                 wb.create_sheet(name).append(cols)
                 changed = True
+        if config.DAILY_SUMMARY_SHEET in wb.sheetnames:
+            ws = wb[config.DAILY_SUMMARY_SHEET]
+            headers = [ws.cell(1, c).value for c in range(1, ws.max_column + 1)]
+            if headers != config.SUMMARY_COLUMNS and ws.max_row >= 1:
+                rows_data = []
+                for row in range(2, ws.max_row + 1):
+                    row_dict = {headers[i]: ws.cell(row, i + 1).value for i in range(len(headers))}
+                    rows_data.append([row_dict.get(col) for col in config.SUMMARY_COLUMNS])
+                ws.delete_rows(1, ws.max_row)
+                ws.append(config.SUMMARY_COLUMNS)
+                for rd in rows_data:
+                    ws.append(rd)
+                changed = True
         if changed:
             wb.save(self.path)
 
@@ -368,7 +381,16 @@ class ExcelManager:
                     status = f"{days} days old"
                 ws.cell(row, self.COL_MAP["Status"], status)
 
-    def append_summary(self, platform: str, method: str, new_jobs: int, total_jobs: int, error: str = "") -> None:
+    def append_summary(
+        self,
+        platform: str,
+        method: str,
+        new_jobs: int,
+        total_jobs: int,
+        error: str = "",
+        raw_jobs: int = 0,
+        duration: float = 0,
+    ) -> None:
         ws = self._ensure_summary_sheet()
         run = now_aest()
         ws.append([
@@ -376,8 +398,10 @@ class ExcelManager:
             run.strftime("%H:%M"),
             platform,
             method,
+            raw_jobs,
             new_jobs,
             total_jobs,
+            round(duration, 1) if duration else "",
             error or "No",
         ])
 

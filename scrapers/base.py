@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import random
 import re
+import socket
 import time
 from typing import Any, Optional
 from urllib.parse import urljoin
@@ -25,6 +26,11 @@ from job_utils import (
 
 _ua = UserAgent()
 
+DEFAULT_VIEWPORT = {"width": 1366, "height": 768}
+STEALTH_INIT_SCRIPT = (
+    "Object.defineProperty(navigator, 'webdriver', {get: () => undefined});"
+)
+
 
 def get_random_headers(extra: Optional[dict[str, str]] = None) -> dict[str, str]:
     try:
@@ -39,10 +45,27 @@ def get_random_headers(extra: Optional[dict[str, str]] = None) -> dict[str, str]
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "en-AU,en;q=0.9",
         "Connection": "keep-alive",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "none",
     }
     if extra:
         headers.update(extra)
     return headers
+
+
+def get_runtime_environment() -> str:
+    """Best-effort label for logging (local vs CI)."""
+    import os
+
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        return "github_actions"
+    if os.environ.get("CI"):
+        return "ci"
+    try:
+        return f"local:{socket.gethostname()[:40]}"
+    except Exception:  # noqa: BLE001
+        return "local"
 
 
 def polite_delay() -> None:
@@ -63,15 +86,36 @@ def fetch_html(
     session: Optional[requests.Session] = None,
     extra_headers: Optional[dict[str, str]] = None,
     label: str = "fetch",
+    raise_for_status: bool = True,
 ) -> str:
+    html, _ = fetch_html_with_status(
+        url,
+        timeout=timeout,
+        session=session,
+        extra_headers=extra_headers,
+        label=label,
+        raise_for_status=raise_for_status,
+    )
+    return html
+
+
+def fetch_html_with_status(
+    url: str,
+    timeout: int = 30,
+    session: Optional[requests.Session] = None,
+    extra_headers: Optional[dict[str, str]] = None,
+    label: str = "fetch",
+    raise_for_status: bool = True,
+) -> tuple[str, int]:
     polite_delay()
     headers = dict(session.headers if session else get_random_headers())
     if extra_headers:
         headers.update(extra_headers)
     client = session or requests
     response = client.get(url, headers=headers, timeout=timeout)
-    response.raise_for_status()
-    return response.text
+    if raise_for_status:
+        response.raise_for_status()
+    return response.text, response.status_code
 
 
 def fetch_json_post(
@@ -91,7 +135,17 @@ def fetch_json_post(
     return response.json()
 
 
-def fetch_with_playwright(url: str, label: str = "playwright", wait_ms: int | None = None) -> str:
+def fetch_with_playwright(
+    url: str,
+    label: str = "playwright",
+    wait_ms: int | None = None,
+    *,
+    stealth: bool = False,
+    wait_until: str = "domcontentloaded",
+    scroll: bool = False,
+    timeout_ms: int = 60000,
+    referer: str | None = None,
+) -> str:
     from playwright.sync_api import sync_playwright
 
     polite_delay()
@@ -102,12 +156,101 @@ def fetch_with_playwright(url: str, label: str = "playwright", wait_ms: int | No
     except Exception:  # noqa: BLE001
         ua = get_random_headers()["User-Agent"]
 
+    launch_args = ["--disable-blink-features=AutomationControlled"] if stealth else []
+    extra_headers = get_random_headers()
+    if referer:
+        extra_headers["Referer"] = referer
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True, args=launch_args)
+        context = browser.new_context(
+            user_agent=ua,
+            locale="en-AU",
+            viewport=DEFAULT_VIEWPORT,
+            extra_http_headers=extra_headers,
+        )
+        if stealth:
+            context.add_init_script(STEALTH_INIT_SCRIPT)
+        page = context.new_page()
+        page.goto(url, wait_until=wait_until, timeout=timeout_ms)
+        if scroll:
+            for _ in range(3):
+                page.mouse.wheel(0, 1200)
+                page.wait_for_timeout(800)
+        page.wait_for_timeout(wait_ms)
+        html = page.content()
+        browser.close()
+    return html
+
+
+def fetch_nt_search(keyword: str, wait_ms: int = 10000) -> str:
+    """Submit keyword search on jobs.nt.gov.au/Home/Search."""
+    from playwright.sync_api import sync_playwright
+
+    polite_delay()
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        context = browser.new_context(user_agent=ua, locale="en-AU")
-        page = context.new_page()
-        page.goto(url, wait_until="domcontentloaded", timeout=60000)
+        page = browser.new_page(locale="en-AU")
+        page.goto("https://jobs.nt.gov.au/Home/Search", timeout=60000)
+        page.wait_for_timeout(4000)
+        kw_input = page.locator("input[name*='keyword' i]").first
+        kw_input.fill(keyword)
+        page.locator("button:has-text('Search')").first.click()
         page.wait_for_timeout(wait_ms)
+        html = page.content()
+        browser.close()
+    return html
+
+
+def fetch_smartjobs_search(keyword: str, wait_ms: int = 10000) -> str:
+    """Load SmartJobs QLD organ search and submit a keyword."""
+    from playwright.sync_api import sync_playwright
+
+    polite_delay()
+    url = config.SMARTJOBS_SEARCH_URL
+    with sync_playwright() as p:
+        browser = p.chromium.launch(
+            headless=True,
+            args=["--disable-blink-features=AutomationControlled"],
+        )
+        context = browser.new_context(locale="en-AU", viewport=DEFAULT_VIEWPORT)
+        context.add_init_script(STEALTH_INIT_SCRIPT)
+        page = context.new_page()
+        page.goto(url, wait_until="domcontentloaded", timeout=90000)
+        page.wait_for_timeout(5000)
+        text_input = page.locator("input[type=text]").first
+        if text_input.count():
+            text_input.fill(keyword)
+            page.keyboard.press("Enter")
+            page.wait_for_timeout(wait_ms)
+        html = page.content()
+        browser.close()
+    return html
+
+
+def fetch_mercy_workday_search(keyword: str = "registrar", wait_ms: int = 20000) -> str:
+    """Playwright search on Mercy Health Workday careers site."""
+    from playwright.sync_api import sync_playwright
+
+    cfg = config.PORTAL_CONFIG["mercy_workday"]
+    base = cfg.get("workday_fallback_url", "")
+    site = cfg.get("site", "Mercy_Health_Careers")
+    url = f"{base}/en-US/{site}"
+    polite_delay()
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])
+        context = browser.new_context(locale="en-AU", viewport=DEFAULT_VIEWPORT)
+        context.add_init_script(STEALTH_INIT_SCRIPT)
+        page = context.new_page()
+        page.goto(url, wait_until="networkidle", timeout=90000)
+        page.wait_for_timeout(5000)
+        search = page.locator("input[data-automation-id='searchBox']")
+        if search.count():
+            search.first.fill(keyword)
+            page.keyboard.press("Enter")
+            page.wait_for_timeout(wait_ms)
+        else:
+            page.goto(f"{url}?q={keyword.replace(' ', '+')}", wait_until="networkidle", timeout=90000)
+            page.wait_for_timeout(wait_ms)
         html = page.content()
         browser.close()
     return html

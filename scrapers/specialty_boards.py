@@ -18,12 +18,15 @@ from job_utils import (
 from resume_matcher import match_label, score_resume_match
 from scrapers.base import (
     absolute_url,
-    build_job,
     fetch_html,
+    fetch_html_with_status,
     fetch_with_playwright,
+    get_runtime_environment,
     soup_from_html,
     text,
 )
+from scrapers.block_detection import analyze_html, failure_reason_from_analysis
+from scrapers.portal_parsers import parse_ranzcog
 
 
 def _score_jobs(jobs: list[JobRecord]) -> list[JobRecord]:
@@ -47,35 +50,50 @@ def _is_au_job(card_text: str, title: str) -> bool:
 
 
 def scrape_ranzcog() -> list[JobRecord]:
+    """RANZCOG — stealth Playwright with static fallback and environment logging."""
     cfg = config.PORTAL_CONFIG["ranzcog"]
-    html = fetch_with_playwright(cfg["search_url"], label="ranzcog")
-    jobs = []
+    env = get_runtime_environment()
+    last_reason = ""
 
-    soup = soup_from_html(html)
-    for row in soup.select("table tr, .job-listing, article, li"):
-        link_el = row.find("a", href=True)
-        if not link_el:
-            continue
-        title = text(link_el)
-        if len(title) < 5:
-            continue
-        card_text = text(row)
-        if not any(kw.lower() in card_text.lower() for kw in config.KEYWORDS):
-            continue
-        if not _is_au_job(card_text, title):
-            continue
-        job = build_job(
-            title=title,
-            link=link_el["href"],
-            base_url=cfg["base_url"],
-            portal_key="ranzcog",
-            card_text=card_text,
-            specialty="Obstetrics and Gynaecology",
+    try:
+        html = fetch_with_playwright(
+            cfg["search_url"],
+            label="ranzcog",
+            stealth=config.RANZCOG_USE_STEALTH,
+            wait_until="networkidle",
         )
-        if job:
-            jobs.append(job)
+        analysis = analyze_html(html, status_code=200 if len(html) > 500 else 403)
+        jobs = parse_ranzcog(html, cfg["base_url"])
+        if jobs:
+            return _score_jobs(jobs)
+        last_reason = failure_reason_from_analysis(analysis, len(jobs))
+    except Exception as exc:  # noqa: BLE001
+        last_reason = f"playwright_{type(exc).__name__}: {str(exc)[:100]}"
 
-    return _score_jobs(jobs)
+    try:
+        html, status = fetch_html_with_status(cfg["search_url"], label="ranzcog", raise_for_status=False)
+        analysis = analyze_html(html, status_code=status)
+        jobs = parse_ranzcog(html, cfg["base_url"])
+        if jobs:
+            return _score_jobs(jobs)
+        if not last_reason:
+            last_reason = failure_reason_from_analysis(analysis, len(jobs))
+    except Exception as exc:  # noqa: BLE001
+        last_reason = f"static_{type(exc).__name__}: {str(exc)[:100]}"
+
+    from scrapers.ranzcog_rss import scrape_ranzcog_peninsula_fallback, scrape_ranzcog_rss_fallback
+
+    rss_jobs = scrape_ranzcog_rss_fallback()
+    if rss_jobs:
+        return _score_jobs(rss_jobs)
+
+    racp_jobs = scrape_ranzcog_peninsula_fallback()
+    if racp_jobs:
+        return _score_jobs(racp_jobs)
+
+    raise RuntimeError(
+        f"blocked: RANZCOG jobs board blocked from {env} — {last_reason or '403 Forbidden'}; all fallbacks empty"
+    )
 
 
 def scrape_racp() -> list[JobRecord]:

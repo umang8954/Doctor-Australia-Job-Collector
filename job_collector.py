@@ -62,6 +62,8 @@ def run_all_scrapers(logger: RunLogger) -> dict[str, dict]:
                 "error": outcome.error,
                 "sheet": sheet,
                 "method": outcome.method_used or method,
+                "raw_count": len(raw_jobs),
+                "duration": outcome.duration_seconds,
             }
         except Exception as exc:  # noqa: BLE001
             err = str(exc)
@@ -109,7 +111,15 @@ def main() -> int:
 
         added = excel.add_jobs(sheet, jobs)
         total = excel.sheet_job_count(sheet)
-        excel.append_summary(sheet, method, added, total, error=error)
+        excel.append_summary(
+            sheet,
+            method,
+            added,
+            total,
+            error=error,
+            raw_jobs=result.get("raw_count", len(jobs)),
+            duration=result.get("duration", 0),
+        )
         stats[sheet] = added
         total_new += added
         logger.log(f"  {sheet}: {added} new (total: {total})")

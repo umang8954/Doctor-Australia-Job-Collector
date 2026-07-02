@@ -273,10 +273,44 @@ NON_AU_LOCATION_KEYWORDS = [
 AU_DOMAIN_SUFFIXES = (".au", ".gov.au", ".edu.au", ".org.au", ".asn.au")
 
 PAGEUP_AU_SEARCH_URLS = [
-    "https://careers.slhd.nsw.gov.au/careers/search/?q=registrar",
-    "https://careers.health.qld.gov.au/search/?q=medical+officer",
-    "https://careers.sahealth.sa.gov.au/search/?q=registrar",
+    {
+        "url": "https://jobs.health.nsw.gov.au/jobs/search?q=registrar+medical",
+        "method": "static",
+        "hospital": "NSW Health",
+        "state": "NSW",
+        "parser": "nsw_health",
+    },
+    {
+        "url": "https://careers.health.qld.gov.au/search/?q=registrar",
+        "method": "playwright",
+        "hospital": "Queensland Health",
+        "state": "QLD",
+        "parser": "qld_health",
+    },
+    {
+        "url": "https://careers.sahealth.sa.gov.au/caw/en/listing/?search-keyword=registrar+medical",
+        "method": "static",
+        "hospital": "SA Health",
+        "state": "SA",
+        "parser": "pageup_sa",
+    },
 ]
+
+SMARTJOBS_SEARCH_URL = (
+    "https://smartjobs.qld.gov.au/jobtools/jncustomsearch.jobsearch?in_organid=14904"
+)
+SMARTJOBS_SEARCH_KEYWORDS = ["registrar", "medical officer", "doctor"]
+
+JOBS_NT_SEARCH_KEYWORDS = ["medical", "doctor", "registrar", "health"]
+
+PORTAL_ZERO_STREAK_DISABLE = 3
+
+AUTO_DISABLE_DEAD_PORTALS = True
+
+# Skip JobRadars on CI/datacenter IPs where 403 is common
+JOBRADARS_SKIP_IN_CI = True
+RANZCOG_USE_STEALTH = True
+PORTAL_ZERO_RETRY_ON_ZERO = True
 
 DATE_FILTER_DAYS = 7
 
@@ -296,10 +330,6 @@ VALIDATION_CONFIDENCE_THRESHOLD = 30  # 0–100; jobs below this are flagged
 VALIDATION_FILTER_BELOW_THRESHOLD = False  # True = drop jobs below threshold
 
 FOLLOW_UP_AFTER_DAYS = 7
-
-PORTAL_ZERO_STREAK_DISABLE = 3
-
-AUTO_DISABLE_DEAD_PORTALS = True
 
 # --- Paths ---
 
@@ -331,9 +361,14 @@ RETRY_DELAY_SECONDS = 5
 PLAYWRIGHT_WAIT_MS = 4000
 
 PORTAL_PLAYWRIGHT_WAIT_MS = {
-    "peninsula_health": 8000,
+    "peninsula_health": 12000,
     "wa_health": 8000,
     "careers_vic": 6000,
+    "jobs_nt": 10000,
+    "smartjobs_qld": 10000,
+    "ranzcog": 10000,
+    "jobradars": 10000,
+    "mercy_workday": 15000,
 }
 
 # --- Excel ---
@@ -366,21 +401,15 @@ ALL_JOBS_SHEET = "All_Jobs_Australia"
 PROFILE_MATCHES_SHEET = "Profile_Matches"
 
 SUMMARY_COLUMNS = [
-
     "Run Date",
-
     "Run Time (AEST)",
-
     "Platform",
-
     "Method",
-
+    "Raw Jobs",
     "New Jobs Found",
-
     "Total Jobs in Sheet",
-
+    "Duration (s)",
     "Errors?",
-
 ]
 
 APPLY_QUEUE_SHEET = "Apply_Queue"
@@ -482,7 +511,7 @@ PORTAL_CONFIG = {
 
         "base_url": "https://smartjobs.qld.gov.au",
 
-        "search_url": "https://smartjobs.qld.gov.au/jobs/search?keyword=medical+officer",
+        "search_url": "https://smartjobs.qld.gov.au/jobtools/jncustomsearch.jobsearch?in_organid=14904",
 
         "method": "playwright",
 
@@ -498,7 +527,7 @@ PORTAL_CONFIG = {
 
         "base_url": "https://jobs.nt.gov.au",
 
-        "search_url": "https://jobs.nt.gov.au/jobs?search=medical+officer",
+        "search_url": "https://jobs.nt.gov.au/Home/Search",
 
         "method": "playwright",
 
@@ -578,7 +607,7 @@ PORTAL_CONFIG = {
 
         "base_url": "https://mercyhealth.mercury.com.au",
 
-        "search_url": "https://mercyhealth.mercury.com.au/SearchResults.aspx",
+        "search_url": "https://mercyhealth.mercury.com.au/SearchResults.aspx?Keywords=registrar",
 
         "method": "mercury",
 
@@ -588,9 +617,11 @@ PORTAL_CONFIG = {
 
         "tenant": "mercyagedcare",
 
-        "site": "MercyCare",
+        "site": "External",
 
         "workday_fallback_url": "https://mercyagedcare.wd105.myworkdayjobs.com",
+
+        "mercury_timeout": 60,
 
     },
 
@@ -714,7 +745,7 @@ PORTAL_CONFIG = {
 
         "search_url": "https://australia.jobradars.com/jobs?q=registrar+medical",
 
-        "method": "static",
+        "method": "playwright",
 
         "state": "Australia",
 
@@ -726,9 +757,9 @@ PORTAL_CONFIG = {
 
         "sheet": "PageUp",
 
-        "base_url": "https://careers.slhd.nsw.gov.au",
+        "base_url": "https://jobs.health.nsw.gov.au",
 
-        "search_url": "https://careers.slhd.nsw.gov.au/careers/search/?q=registrar",
+        "search_url": "https://jobs.health.nsw.gov.au/jobs/search?q=registrar+medical",
 
         "method": "pageup",
 
@@ -749,7 +780,8 @@ def _portal_hosts():
         host = urlparse(url).netloc
         if host:
             hosts.add(host)
-    for url in PAGEUP_AU_SEARCH_URLS:
+    for entry in PAGEUP_AU_SEARCH_URLS:
+        url = entry["url"] if isinstance(entry, dict) else entry
         host = urlparse(url).netloc
         if host:
             hosts.add(host)
