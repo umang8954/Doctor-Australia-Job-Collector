@@ -387,12 +387,8 @@ SHEET_COLUMNS = [
     "Portal",
     "Best Profile",
     "Match %",
-    "Extraction Method Used",
-    "Method Reliability Note",
-    "Validation Flags",
     "Status",
     "Applied?",
-    "Notes",
 ]
 
 DAILY_SUMMARY_SHEET = "Daily_Summary"
@@ -448,13 +444,9 @@ APPLY_QUEUE_COLUMNS = [
     "State",
     "Apply Link",
     "Match %",
-    "Extraction Method Used",
-    "Method Reliability Note",
-    "Validation Flags",
     "Match Label",
     "Status",
     "Applied?",
-    "Notes",
 ]
 
 STATUS_NEW = "Yet to apply"

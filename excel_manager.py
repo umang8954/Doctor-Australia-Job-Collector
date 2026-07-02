@@ -4,7 +4,6 @@ Read / write Job_Tracker.xlsx - one tab per portal, multi-profile matching, appl
 
 from __future__ import annotations
 
-import re
 from typing import Any, Optional
 
 from openpyxl import Workbook, load_workbook
@@ -37,6 +36,7 @@ class ExcelManager:
         try:
             wb = load_workbook(self.path)
             self._migrate_sheets(wb)
+            self._remove_obsolete_queue_sheets(wb)
             self._migrate_columns(wb)
             return wb
         except FileNotFoundError:
@@ -98,6 +98,15 @@ class ExcelManager:
         if changed:
             wb.save(self.path)
 
+    def _remove_obsolete_queue_sheets(self, wb: Workbook) -> None:
+        changed = False
+        for name in list(wb.sheetnames):
+            if name.startswith("Queue_dr_"):
+                wb.remove(wb[name])
+                changed = True
+        if changed:
+            wb.save(self.path)
+
     def _migrate_columns(self, wb: Workbook) -> None:
         changed = False
         for sheet in config.ALL_JOB_SOURCE_SHEETS + [config.ALL_JOBS_SHEET]:
@@ -126,14 +135,40 @@ class ExcelManager:
                     level = detect_experience_level(f"{title} {specialty}")
                     if level:
                         ws.cell(row, insert_at, level)
-            for col in ("Extraction Method Used", "Method Reliability Note", "Validation Flags"):
-                if col not in headers:
-                    insert_at = headers.index("Match %") + 1 if "Match %" in headers else ws.max_column + 1
-                    ws.insert_cols(insert_at)
-                    ws.cell(1, insert_at, col)
-                    changed = True
-                    headers = [ws.cell(1, c).value for c in range(1, ws.max_column + 1)]
+            obsolete_cols = (
+                "Extraction Method Used",
+                "Method Reliability Note",
+                "Validation Flags",
+                "Notes",
+            )
+            for col in sorted(
+                (headers.index(c) + 1 for c in obsolete_cols if c in headers),
+                reverse=True,
+            ):
+                ws.delete_cols(col)
+                changed = True
+            headers = [ws.cell(1, c).value for c in range(1, ws.max_column + 1)]
             changed = self._reorder_columns_to_config(ws) or changed
+        if config.APPLY_QUEUE_SHEET in wb.sheetnames:
+            ws = wb[config.APPLY_QUEUE_SHEET]
+            headers = [ws.cell(1, c).value for c in range(1, ws.max_column + 1)]
+            if headers != config.APPLY_QUEUE_COLUMNS:
+                ws.delete_rows(1, ws.max_row)
+                ws.append(config.APPLY_QUEUE_COLUMNS)
+                changed = True
+            else:
+                obsolete_cols = (
+                    "Extraction Method Used",
+                    "Method Reliability Note",
+                    "Validation Flags",
+                    "Notes",
+                )
+                for col in sorted(
+                    (headers.index(c) + 1 for c in obsolete_cols if c in headers),
+                    reverse=True,
+                ):
+                    ws.delete_cols(col)
+                    changed = True
         if changed:
             wb.save(self.path)
 
@@ -233,17 +268,9 @@ class ExcelManager:
             key = dedup_key(job.hospital, job.title)
             posted_str = format_date(job.posted_date) if job.posted_date else format_date(now_aest())
 
-            profile_id, profile_name, match_pct, val_flags = self._score_job(job, sheet)
+            profile_id, profile_name, match_pct, _val_flags = self._score_job(job, sheet)
             if job.match_pct and job.match_pct > match_pct:
                 match_pct = job.match_pct
-
-            label = match_label(match_pct)
-            notes = job.notes or ""
-            if label == "High Match" and "High Match" not in notes:
-                notes = f"High Match | {notes}".strip(" |")
-            validation_flags = job.validation_flags or val_flags
-            extract_method = job.extraction_method or ""
-            reliability = job.method_reliability_note or ""
 
             if key in self._index[sheet]:
                 row_num, old_link = self._index[sheet][key]
@@ -251,14 +278,8 @@ class ExcelManager:
                     ws.cell(row_num, self.COL_MAP["Apply Link"], job.apply_link)
                 ws.cell(row_num, self.COL_MAP["Best Profile"], profile_name)
                 ws.cell(row_num, self.COL_MAP["Portal"], sheet)
-                if "Validation Flags" in self.COL_MAP:
-                    ws.cell(row_num, self.COL_MAP["Validation Flags"], validation_flags)
                 if "Match %" in self.COL_MAP:
                     ws.cell(row_num, self.COL_MAP["Match %"], match_pct)
-                if "Extraction Method Used" in self.COL_MAP:
-                    ws.cell(row_num, self.COL_MAP["Extraction Method Used"], extract_method)
-                if "Method Reliability Note" in self.COL_MAP:
-                    ws.cell(row_num, self.COL_MAP["Method Reliability Note"], reliability)
                 self._index[sheet][key] = (row_num, job.apply_link)
                 continue
 
@@ -276,12 +297,8 @@ class ExcelManager:
                 sheet,
                 profile_name,
                 match_pct,
-                extract_method,
-                reliability,
-                validation_flags,
                 config.STATUS_NEW,
                 "",
-                notes,
             ]
             ws.append(row_data)
             self._index[sheet][key] = (ws.max_row, job.apply_link)
@@ -407,7 +424,11 @@ class ExcelManager:
 
     def rebuild_apply_queue(self) -> int:
         ws_queue = self._ensure_custom_sheet(config.APPLY_QUEUE_SHEET, config.APPLY_QUEUE_COLUMNS)
-        if ws_queue.max_row > 1:
+        headers = [ws_queue.cell(1, c).value for c in range(1, ws_queue.max_column + 1)]
+        if headers != config.APPLY_QUEUE_COLUMNS:
+            ws_queue.delete_rows(1, ws_queue.max_row)
+            ws_queue.append(config.APPLY_QUEUE_COLUMNS)
+        elif ws_queue.max_row > 1:
             ws_queue.delete_rows(2, ws_queue.max_row - 1)
 
         candidates: list[dict] = []
@@ -438,11 +459,7 @@ class ExcelManager:
                     "state": safe_cell(ws, row, "State", self.COL_MAP),
                     "link": safe_cell(ws, row, "Apply Link", self.COL_MAP),
                     "match_pct": match_pct,
-                    "extract_method": safe_cell(ws, row, "Extraction Method Used", self.COL_MAP),
-                    "reliability": safe_cell(ws, row, "Method Reliability Note", self.COL_MAP),
-                    "val_flags": safe_cell(ws, row, "Validation Flags", self.COL_MAP),
                     "status": status,
-                    "notes": safe_cell(ws, row, "Notes", self.COL_MAP),
                 })
 
         candidates.sort(key=lambda c: c["match_pct"], reverse=True)
@@ -459,40 +476,12 @@ class ExcelManager:
                 c["state"],
                 c["link"],
                 c["match_pct"],
-                c.get("extract_method", ""),
-                c.get("reliability", ""),
-                c.get("val_flags", ""),
                 match_label(c["match_pct"]),
                 c["status"],
                 "",
-                c["notes"],
             ])
 
-        self._rebuild_per_profile_queues(candidates)
         return min(len(candidates), config.APPLY_QUEUE_SIZE)
-
-    def _rebuild_per_profile_queues(self, candidates: list[dict]) -> None:
-        for profile in self.profiles:
-            pid = profile.get("id", "profile")
-            pname = profile.get("name", pid)
-            safe_name = re.sub(r"[^\w]", "_", pid)[:28]
-            sheet_name = f"Queue_{safe_name}"[:31]
-            cols = config.APPLY_QUEUE_COLUMNS
-            ws = self._ensure_custom_sheet(sheet_name, cols)
-            if ws.max_row > 1:
-                ws.delete_rows(2, ws.max_row - 1)
-            profile_jobs = [c for c in candidates if c["profile"] == pname]
-            profile_jobs.sort(key=lambda c: c["match_pct"], reverse=True)
-            for rank, c in enumerate(profile_jobs[:15], start=1):
-                ws.append([
-                    rank, pname, c["sheet"], c["title"], c["specialty"], c["experience"],
-                    c["hospital"], c["location"], c["state"], c["link"],
-                    c["match_pct"],
-                    c.get("extract_method", ""),
-                    c.get("reliability", ""),
-                    c.get("val_flags", ""),
-                    match_label(c["match_pct"]), c["status"], "", c["notes"],
-                ])
 
     def revalidate_all_jobs(self) -> int:
         """Re-score every job row using job_validator (Phases 2 & 3)."""
@@ -514,8 +503,6 @@ class ExcelManager:
                 )
                 ws.cell(row, self.COL_MAP["Best Profile"], result.profile_name)
                 ws.cell(row, self.COL_MAP["Match %"], result.match_pct)
-                if "Validation Flags" in self.COL_MAP:
-                    ws.cell(row, self.COL_MAP["Validation Flags"], "; ".join(result.flags))
                 updated += 1
         return updated
 
@@ -529,9 +516,6 @@ class ExcelManager:
             for row in range(2, ws.max_row + 1):
                 applied = safe_cell(ws, row, "Applied?", self.COL_MAP).strip().lower()
                 if applied not in ("y", "yes", "applied"):
-                    continue
-                notes = safe_cell(ws, row, "Notes", self.COL_MAP).lower()
-                if any(x in notes for x in ("response", "interview", "rejected")):
                     continue
                 added_dt = parse_added_on(safe_cell(ws, row, "Job Added On", self.COL_MAP))
                 if not added_dt:
