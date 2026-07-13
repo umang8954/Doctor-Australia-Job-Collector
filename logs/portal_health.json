@@ -3,219 +3,102 @@
     "smartjobs_qld": {
       "zero_streak": 0,
       "last_jobs": 49,
-      "last_run": "2026-07-13",
+      "last_run": "2026-07-14",
       "last_error": ""
     },
     "jobs_nt": {
       "zero_streak": 0,
-      "last_jobs": 36,
-      "last_run": "2026-07-13",
+      "last_jobs": 38,
+      "last_run": "2026-07-14",
       "last_error": ""
     },
     "careers_vic": {
-      "zero_streak": 3,
+      "zero_streak": 1,
       "last_jobs": 0,
-      "last_run": "2026-07-13",
+      "last_run": "2026-07-14",
       "last_error": "careers_vic_failed: playwright=zero_jobs_retry; playwright=0 jobs; static_html=403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
     },
     "monash_health": {
       "zero_streak": 0,
-      "last_jobs": 21,
-      "last_run": "2026-07-13",
+      "last_jobs": 22,
+      "last_run": "2026-07-14",
       "last_error": ""
     },
     "western_health": {
       "zero_streak": 0,
-      "last_jobs": 15,
-      "last_run": "2026-07-13",
+      "last_jobs": 16,
+      "last_run": "2026-07-14",
       "last_error": ""
     },
     "wa_health": {
       "zero_streak": 0,
       "last_jobs": 25,
-      "last_run": "2026-07-13",
+      "last_run": "2026-07-14",
       "last_error": ""
     },
     "peninsula_health": {
-      "zero_streak": 3,
+      "zero_streak": 1,
       "last_jobs": 0,
-      "last_run": "2026-07-13",
+      "last_run": "2026-07-14",
       "last_error": "peninsula_health_failed: playwright=parser_found_nothing: page loaded but no job cards parsed; static_html=0 jobs"
     },
     "the_womens": {
-      "zero_streak": 3,
+      "zero_streak": 1,
       "last_jobs": 0,
-      "last_run": "2026-07-13",
+      "last_run": "2026-07-14",
       "last_error": "the_womens_failed: static_html=zero_jobs_retry; static_html=0 jobs; playwright=0 jobs"
     },
     "grampians_health": {
       "zero_streak": 0,
       "last_jobs": 11,
-      "last_run": "2026-07-13",
+      "last_run": "2026-07-14",
       "last_error": ""
     },
     "eastern_health": {
       "zero_streak": 0,
       "last_jobs": 7,
-      "last_run": "2026-07-13",
+      "last_run": "2026-07-14",
       "last_error": ""
     },
     "rch": {
       "zero_streak": 0,
       "last_jobs": 8,
-      "last_run": "2026-07-13",
+      "last_run": "2026-07-14",
       "last_error": ""
     },
     "ranzcog": {
-      "zero_streak": 3,
+      "zero_streak": 1,
       "last_jobs": 0,
-      "last_run": "2026-07-13",
+      "last_run": "2026-07-14",
       "last_error": "ranzcog_failed: playwright=blocked: RANZCOG jobs board blocked from github_actions \u2014 blocked: HTTP 403; all fallbacks empty; static_html=0 jobs"
     },
     "racp": {
       "zero_streak": 0,
       "last_jobs": 23,
-      "last_run": "2026-07-13",
+      "last_run": "2026-07-14",
       "last_error": ""
     },
     "jobradars": {
       "zero_streak": 0,
-      "last_jobs": 8,
-      "last_run": "2026-07-13",
+      "last_jobs": 3,
+      "last_run": "2026-07-14",
       "last_error": ""
     },
     "pageup": {
       "zero_streak": 0,
-      "last_jobs": 15,
-      "last_run": "2026-07-13",
+      "last_jobs": 6,
+      "last_run": "2026-07-14",
       "last_error": ""
     },
     "mercy_workday": {
       "zero_streak": 0,
-      "last_jobs": 15,
-      "last_run": "2026-07-13",
+      "last_jobs": 13,
+      "last_run": "2026-07-14",
       "last_error": ""
     }
   },
-  "disabled": [
-    "careers_vic",
-    "peninsula_health",
-    "ranzcog",
-    "the_womens"
-  ],
+  "disabled": [],
   "run_log": [
-    {
-      "date": "2026-07-02",
-      "portal": "grampians_health",
-      "status": "ok",
-      "jobs_found": 14,
-      "error": ""
-    },
-    {
-      "date": "2026-07-02",
-      "portal": "eastern_health",
-      "status": "ok",
-      "jobs_found": 11,
-      "error": ""
-    },
-    {
-      "date": "2026-07-02",
-      "portal": "rch",
-      "status": "ok",
-      "jobs_found": 7,
-      "error": ""
-    },
-    {
-      "date": "2026-07-02",
-      "portal": "ranzcog",
-      "status": "ok",
-      "jobs_found": 3,
-      "error": ""
-    },
-    {
-      "date": "2026-07-02",
-      "portal": "racp",
-      "status": "ok",
-      "jobs_found": 24,
-      "error": ""
-    },
-    {
-      "date": "2026-07-02",
-      "portal": "jobradars",
-      "status": "ok",
-      "jobs_found": 4,
-      "error": ""
-    },
-    {
-      "date": "2026-07-02",
-      "portal": "pageup",
-      "status": "ok",
-      "jobs_found": 9,
-      "error": ""
-    },
-    {
-      "date": "2026-07-02",
-      "portal": "mercy_workday",
-      "status": "ok",
-      "jobs_found": 16,
-      "error": ""
-    },
-    {
-      "date": "2026-07-03",
-      "portal": "smartjobs_qld",
-      "status": "ok",
-      "jobs_found": 43,
-      "error": ""
-    },
-    {
-      "date": "2026-07-03",
-      "portal": "jobs_nt",
-      "status": "ok",
-      "jobs_found": 37,
-      "error": ""
-    },
-    {
-      "date": "2026-07-03",
-      "portal": "careers_vic",
-      "status": "error",
-      "jobs_found": 0,
-      "error": "careers_vic_failed: playwright=zero_jobs_retry; playwright=0 jobs; static_html=403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
-    },
-    {
-      "date": "2026-07-03",
-      "portal": "monash_health",
-      "status": "ok",
-      "jobs_found": 23,
-      "error": ""
-    },
-    {
-      "date": "2026-07-03",
-      "portal": "western_health",
-      "status": "ok",
-      "jobs_found": 16,
-      "error": ""
-    },
-    {
-      "date": "2026-07-03",
-      "portal": "wa_health",
-      "status": "ok",
-      "jobs_found": 24,
-      "error": ""
-    },
-    {
-      "date": "2026-07-03",
-      "portal": "peninsula_health",
-      "status": "error",
-      "jobs_found": 0,
-      "error": "peninsula_health_failed: playwright=parser_found_nothing: page loaded but no job cards parsed; static_html=0 jobs"
-    },
-    {
-      "date": "2026-07-03",
-      "portal": "the_womens",
-      "status": "error",
-      "jobs_found": 0,
-      "error": "the_womens_failed: static_html=zero_jobs_retry; static_html=0 jobs; playwright=0 jobs"
-    },
     {
       "date": "2026-07-03",
       "portal": "grampians_health",
@@ -1502,6 +1385,118 @@
       "portal": "mercy_workday",
       "status": "ok",
       "jobs_found": 15,
+      "error": ""
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "smartjobs_qld",
+      "status": "ok",
+      "jobs_found": 49,
+      "error": ""
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "jobs_nt",
+      "status": "ok",
+      "jobs_found": 38,
+      "error": ""
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "careers_vic",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "careers_vic_failed: playwright=zero_jobs_retry; playwright=0 jobs; static_html=403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "monash_health",
+      "status": "ok",
+      "jobs_found": 22,
+      "error": ""
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "western_health",
+      "status": "ok",
+      "jobs_found": 16,
+      "error": ""
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "wa_health",
+      "status": "ok",
+      "jobs_found": 25,
+      "error": ""
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "peninsula_health",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "peninsula_health_failed: playwright=parser_found_nothing: page loaded but no job cards parsed; static_html=0 jobs"
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "the_womens",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "the_womens_failed: static_html=zero_jobs_retry; static_html=0 jobs; playwright=0 jobs"
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "grampians_health",
+      "status": "ok",
+      "jobs_found": 11,
+      "error": ""
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "eastern_health",
+      "status": "ok",
+      "jobs_found": 7,
+      "error": ""
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "rch",
+      "status": "ok",
+      "jobs_found": 8,
+      "error": ""
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "ranzcog",
+      "status": "error",
+      "jobs_found": 0,
+      "error": "ranzcog_failed: playwright=blocked: RANZCOG jobs board blocked from github_actions \u2014 blocked: HTTP 403; all fallbacks empty; static_html=0 jobs"
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "racp",
+      "status": "ok",
+      "jobs_found": 23,
+      "error": ""
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "jobradars",
+      "status": "ok",
+      "jobs_found": 3,
+      "error": ""
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "pageup",
+      "status": "ok",
+      "jobs_found": 6,
+      "error": ""
+    },
+    {
+      "date": "2026-07-14",
+      "portal": "mercy_workday",
+      "status": "ok",
+      "jobs_found": 13,
       "error": ""
     }
   ]
