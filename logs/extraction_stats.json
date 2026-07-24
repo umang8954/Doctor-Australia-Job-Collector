@@ -321,6 +321,16 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 22,
+              "seconds": 8.29,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -658,6 +668,16 @@
               "method": "static_html",
               "jobs": 20,
               "seconds": 4.88,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 22,
+              "seconds": 4.99,
               "error": ""
             }
           ]
@@ -1191,6 +1211,22 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 34.31,
+              "error": "parser_found_nothing: page loaded but no job cards parsed"
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 3.35,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -1502,6 +1538,16 @@
               "method": "static_html",
               "jobs": 11,
               "seconds": 3.95,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 11,
+              "seconds": 5.46,
               "error": ""
             }
           ]
@@ -1819,6 +1865,16 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 10,
+              "seconds": 3.47,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -2133,6 +2189,16 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 10,
+              "seconds": 3.94,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -2444,6 +2510,16 @@
               "method": "static_html",
               "jobs": 23,
               "seconds": 4.86,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 23,
+              "seconds": 5.27,
               "error": ""
             }
           ]
@@ -2819,6 +2895,16 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 44,
+              "seconds": 65.52,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -3176,6 +3262,16 @@
               "method": "playwright",
               "jobs": 40,
               "seconds": 101.78,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 40,
+              "seconds": 110.98,
               "error": ""
             }
           ]
@@ -3783,6 +3879,28 @@
               "error": "403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 10.2,
+              "error": "zero_jobs_retry"
+            },
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 10.86,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 3.85,
+              "error": "403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
+            }
+          ]
         }
       ]
     },
@@ -4084,6 +4202,16 @@
               "method": "playwright",
               "jobs": 25,
               "seconds": 15.33,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 25,
+              "seconds": 15.63,
               "error": ""
             }
           ]
@@ -4715,6 +4843,28 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 3.85,
+              "error": "zero_jobs_retry"
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 3.76,
+              "error": ""
+            },
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 13.29,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -5251,6 +5401,22 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 42.76,
+              "error": "blocked: RANZCOG jobs board blocked from github_actions \u2014 blocked: HTTP 403; all fallbacks empty"
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 3.02,
+              "error": "403 Client Error: Forbidden for url: https://jobs.ranzcog.edu.au/jobs"
+            }
+          ]
         }
       ]
     },
@@ -5633,6 +5799,16 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 5,
+              "seconds": 6.92,
+              "error": ""
+            }
+          ]
         }
       ]
     },
@@ -5990,6 +6166,16 @@
               "method": "pageup_html",
               "jobs": 9,
               "seconds": 23.45,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "pageup_html",
+              "jobs": 8,
+              "seconds": 21.56,
               "error": ""
             }
           ]
@@ -6366,6 +6552,16 @@
               "method": "mercury_html",
               "jobs": 8,
               "seconds": 15.47,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "mercury_html",
+              "jobs": 8,
+              "seconds": 15.94,
               "error": ""
             }
           ]
