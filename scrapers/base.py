@@ -27,8 +27,17 @@ from job_utils import (
 _ua = UserAgent()
 
 DEFAULT_VIEWPORT = {"width": 1366, "height": 768}
-STEALTH_INIT_SCRIPT = (
-    "Object.defineProperty(navigator, 'webdriver', {get: () => undefined});"
+STEALTH_INIT_SCRIPT = """
+Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
+Object.defineProperty(navigator, 'languages', {get: () => ['en-AU', 'en']});
+Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]});
+window.chrome = { runtime: {} };
+"""
+
+# Stable desktop Chrome UA — random UAs sometimes look headless/outdated to WAFs
+STEALTH_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
 )
 
 
@@ -151,13 +160,17 @@ def fetch_with_playwright(
     polite_delay()
     if wait_ms is None:
         wait_ms = config.PORTAL_PLAYWRIGHT_WAIT_MS.get(label, config.PLAYWRIGHT_WAIT_MS)
-    try:
-        ua = _ua.random
-    except Exception:  # noqa: BLE001
-        ua = get_random_headers()["User-Agent"]
+    if stealth:
+        ua = STEALTH_USER_AGENT
+    else:
+        try:
+            ua = _ua.random
+        except Exception:  # noqa: BLE001
+            ua = get_random_headers()["User-Agent"]
 
     launch_args = ["--disable-blink-features=AutomationControlled"] if stealth else []
     extra_headers = get_random_headers()
+    extra_headers["User-Agent"] = ua
     if referer:
         extra_headers["Referer"] = referer
     with sync_playwright() as p:
@@ -167,11 +180,16 @@ def fetch_with_playwright(
             locale="en-AU",
             viewport=DEFAULT_VIEWPORT,
             extra_http_headers=extra_headers,
+            java_script_enabled=True,
         )
         if stealth:
             context.add_init_script(STEALTH_INIT_SCRIPT)
         page = context.new_page()
-        page.goto(url, wait_until=wait_until, timeout=timeout_ms)
+        response = page.goto(url, wait_until=wait_until, timeout=timeout_ms)
+        # If WAF returns 403, one warm reload from same origin sometimes clears it
+        if response is not None and response.status in (403, 429) and stealth:
+            page.wait_for_timeout(2000)
+            page.goto(url, wait_until=wait_until, timeout=timeout_ms)
         if scroll:
             for _ in range(3):
                 page.mouse.wheel(0, 1200)

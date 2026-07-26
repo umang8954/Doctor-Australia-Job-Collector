@@ -11,25 +11,38 @@ from scrapers.portal_parsers import parse_nsw_health
 
 def scrape_jobradars_nsw_fallback() -> list[JobRecord]:
     """
-    When JobRadars returns 403/Cloudflare, pull registrar/medical listings
+    When JobRadars returns 403/404/Cloudflare, pull registrar/medical listings
     from NSW Health jobs portal as an aggregator-style fallback.
     """
     cfg = config.PORTAL_CONFIG["jobradars"]
-    url = "https://jobs.health.nsw.gov.au/jobs/search?q=registrar+medical"
-    html = fetch_html(url, label="jobradars_fallback", timeout=30)
-    jobs = parse_nsw_health(html, "https://jobs.health.nsw.gov.au")
-
+    queries = (
+        "registrar medical",
+        "obstetrics gynaecology registrar",
+        "O&G registrar",
+    )
     filtered: list[JobRecord] = []
-    for job in jobs[:15]:
-        job.platform = cfg.get("sheet", "JobRadars")
-        job.extraction_method = "nsw_health_fallback"
-        job.method_reliability_note = (
-            "Fallback — NSW Health jobs search (JobRadars Cloudflare-blocked)"
-        )
-        if passes_filters(job):
-            job.match_pct = score_resume_match(
-                job.title, job.description, job.specialty, job.location, job.state
+    seen: set[str] = set()
+
+    for q in queries:
+        url = f"https://jobs.health.nsw.gov.au/jobs/search?q={q.replace(' ', '+')}"
+        try:
+            html = fetch_html(url, label="jobradars_fallback", timeout=30)
+        except Exception:  # noqa: BLE001
+            continue
+        jobs = parse_nsw_health(html, "https://jobs.health.nsw.gov.au")
+        for job in jobs[:15]:
+            if job.apply_link in seen:
+                continue
+            seen.add(job.apply_link)
+            job.platform = cfg.get("sheet", "JobRadars")
+            job.extraction_method = "nsw_health_fallback"
+            job.method_reliability_note = (
+                "Fallback — NSW Health jobs search (JobRadars unavailable)"
             )
-            job.match_label = match_label(job.match_pct)
-            filtered.append(job)
+            if passes_filters(job):
+                job.match_pct = score_resume_match(
+                    job.title, job.description, job.specialty, job.location, job.state
+                )
+                job.match_label = match_label(job.match_pct)
+                filtered.append(job)
     return filtered

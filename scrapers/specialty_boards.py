@@ -12,6 +12,7 @@ from job_utils import (
     detect_experience_level,
     detect_specialty,
     detect_state,
+    passes_australia_filter,
     passes_filters,
     safe_str,
 )
@@ -22,6 +23,8 @@ from scrapers.base import (
     fetch_html_with_status,
     fetch_with_playwright,
     get_runtime_environment,
+    new_session,
+    polite_delay,
     soup_from_html,
     text,
 )
@@ -42,6 +45,45 @@ def _score_jobs(jobs: list[JobRecord]) -> list[JobRecord]:
     return filtered
 
 
+def _score_ranzcog_jobs(jobs: list[JobRecord]) -> list[JobRecord]:
+    """RANZCOG board is O&G-focused; keep AU clinical roles without the 7-day cut-off."""
+    filtered: list[JobRecord] = []
+    for job in jobs:
+        if not job.title or len(job.title) < 3:
+            continue
+        if not job.apply_link.startswith("http"):
+            continue
+        blob = job.combined_text().lower()
+        # Drop clearly overseas postings (Pacific / NZ academic roles)
+        overseas = (
+            "fiji",
+            "papua new guinea",
+            "solomon island",
+            "new zealand",
+            "wellington",
+            "christchurch",
+            "auckland",
+        )
+        title_hosp = f"{job.title} {job.hospital} {job.location}".lower()
+        if any(x in title_hosp for x in overseas):
+            continue
+        if any(x in blob for x in ("fiji national", "papua new guinea", "solomon island")):
+            continue
+        if not passes_australia_filter(job):
+            # Still keep if apply link is on jobs.ranzcog.edu.au and title isn't overseas
+            if "jobs.ranzcog.edu.au" not in job.apply_link.lower():
+                continue
+            if any(x in title_hosp for x in overseas):
+                continue
+        job.specialty = job.specialty or "Obstetrics & Gynaecology"
+        job.match_pct = score_resume_match(
+            job.title, job.description, job.specialty, job.location, job.state
+        )
+        job.match_label = match_label(job.match_pct)
+        filtered.append(job)
+    return filtered
+
+
 def _is_au_job(card_text: str, title: str) -> bool:
     combined = f"{title} {card_text}"
     if contains_non_au_location(combined):
@@ -49,35 +91,114 @@ def _is_au_job(card_text: str, title: str) -> bool:
     return contains_au_location(combined) or bool(detect_state(combined))
 
 
+def _fetch_ranzcog_pages() -> tuple[list[JobRecord], str]:
+    """
+    Fetch RANZCOG listings via static HTML + AJAX pagination.
+    Category filter URLs often return 403; the main board + ajax/?action=request_for_listings works.
+    """
+    cfg = config.PORTAL_CONFIG["ranzcog"]
+    base = cfg["base_url"]
+    all_jobs: list[JobRecord] = []
+    seen: set[str] = set()
+    last_reason = ""
+
+    session = new_session(referer="https://www.ranzcog.edu.au/")
+    try:
+        polite_delay()
+        resp = session.get(cfg["search_url"], timeout=45)
+        status = resp.status_code
+        html = resp.text
+    except Exception as exc:  # noqa: BLE001
+        return [], f"static_{type(exc).__name__}: {str(exc)[:100]}"
+
+    analysis = analyze_html(html, status_code=status)
+    if analysis.is_blocked:
+        return [], failure_reason_from_analysis(analysis, 0)
+
+    page1 = parse_ranzcog(html, base)
+    for job in page1:
+        if job.apply_link not in seen:
+            seen.add(job.apply_link)
+            all_jobs.append(job)
+
+    # AJAX "Load more" pages (HTML fragments of listing-item articles)
+    for page in range(2, 8):
+        ajax_url = f"{base.rstrip('/')}/ajax/?action=request_for_listings&page={page}"
+        try:
+            polite_delay()
+            r = session.get(
+                ajax_url,
+                timeout=30,
+                headers={
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Referer": cfg["search_url"],
+                    "Accept": "text/html, */*; q=0.01",
+                },
+            )
+            if r.status_code in (403, 429, 503):
+                last_reason = f"ajax_page{page}_HTTP{r.status_code}"
+                break
+            frag = r.text or ""
+            if len(frag.strip()) < 50:
+                break
+            page_jobs = parse_ranzcog(frag, base)
+            if not page_jobs:
+                break
+            new = 0
+            for job in page_jobs:
+                if job.apply_link in seen:
+                    continue
+                seen.add(job.apply_link)
+                all_jobs.append(job)
+                new += 1
+            if new == 0:
+                break
+        except Exception as exc:  # noqa: BLE001
+            last_reason = f"ajax_page{page}_{type(exc).__name__}: {str(exc)[:80]}"
+            break
+
+    if all_jobs:
+        return all_jobs, ""
+    return [], last_reason or failure_reason_from_analysis(analysis, 0)
+
+
 def scrape_ranzcog() -> list[JobRecord]:
-    """RANZCOG — stealth Playwright with static fallback and environment logging."""
+    """RANZCOG — static + AJAX first (avoids category 403), then stealth Playwright, then fallbacks."""
     cfg = config.PORTAL_CONFIG["ranzcog"]
     env = get_runtime_environment()
     last_reason = ""
+
+    jobs, err = _fetch_ranzcog_pages()
+    if jobs:
+        return _score_ranzcog_jobs(jobs)
+    last_reason = err or "static_ajax_empty"
 
     try:
         html = fetch_with_playwright(
             cfg["search_url"],
             label="ranzcog",
-            stealth=config.RANZCOG_USE_STEALTH,
-            wait_until="networkidle",
+            stealth=True,
+            wait_until="domcontentloaded",
+            referer="https://www.google.com.au/",
         )
-        analysis = analyze_html(html, status_code=200 if len(html) > 500 else 403)
+        analysis = analyze_html(html, status_code=200 if len(html) > 2000 else 403)
         jobs = parse_ranzcog(html, cfg["base_url"])
         if jobs:
-            return _score_jobs(jobs)
-        last_reason = failure_reason_from_analysis(analysis, len(jobs))
+            return _score_ranzcog_jobs(jobs)
+        last_reason = failure_reason_from_analysis(analysis, len(jobs)) or last_reason
     except Exception as exc:  # noqa: BLE001
         last_reason = f"playwright_{type(exc).__name__}: {str(exc)[:100]}"
 
     try:
-        html, status = fetch_html_with_status(cfg["search_url"], label="ranzcog", raise_for_status=False)
+        html, status = fetch_html_with_status(
+            cfg["search_url"], label="ranzcog", raise_for_status=False
+        )
         analysis = analyze_html(html, status_code=status)
         jobs = parse_ranzcog(html, cfg["base_url"])
         if jobs:
-            return _score_jobs(jobs)
-        if not last_reason:
-            last_reason = failure_reason_from_analysis(analysis, len(jobs))
+            return _score_ranzcog_jobs(jobs)
+        if analysis.is_blocked:
+            last_reason = failure_reason_from_analysis(analysis, 0)
     except Exception as exc:  # noqa: BLE001
         last_reason = f"static_{type(exc).__name__}: {str(exc)[:100]}"
 
@@ -85,14 +206,14 @@ def scrape_ranzcog() -> list[JobRecord]:
 
     rss_jobs = scrape_ranzcog_rss_fallback()
     if rss_jobs:
-        return _score_jobs(rss_jobs)
+        return _score_ranzcog_jobs(rss_jobs)
 
-    racp_jobs = scrape_ranzcog_peninsula_fallback()
-    if racp_jobs:
-        return _score_jobs(racp_jobs)
+    peninsula_jobs = scrape_ranzcog_peninsula_fallback()
+    if peninsula_jobs:
+        return _score_ranzcog_jobs(peninsula_jobs)
 
     raise RuntimeError(
-        f"blocked: RANZCOG jobs board blocked from {env} — {last_reason or '403 Forbidden'}; all fallbacks empty"
+        f"ranzcog_failed from {env} — {last_reason or 'no listings parsed'}; all fallbacks empty"
     )
 
 

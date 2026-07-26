@@ -120,40 +120,83 @@ def parse_jobs_nt(html: str, base_url: str) -> list[JobRecord]:
 
 
 def parse_ranzcog(html: str, base_url: str) -> list[JobRecord]:
-    """RANZCOG job board — table rows and listing articles."""
+    """RANZCOG job board — listing-item articles with /job/{id}/slug URLs."""
     soup = soup_from_html(html)
     jobs: list[JobRecord] = []
     seen: set[str] = set()
     cfg = config.PORTAL_CONFIG["ranzcog"]
 
-    for row in soup.select("table tr, .job-listing, article, .views-row, li.views-row"):
-        link_el = row.find("a", href=True)
+    cards = soup.select("article.listing-item, article.listing-item__jobs, .listing-item")
+    if not cards:
+        cards = soup.select("table tr, .job-listing, article, .views-row, li.views-row")
+
+    for row in cards:
+        # Prefer the title link — first <a> is often an empty logo link
+        link_el = row.select_one(".listing-item__title a.link, .listing-item__title a, a.link")
+        if not link_el:
+            for a in row.find_all("a", href=True):
+                href = a.get("href", "")
+                title_candidate = text(a)
+                if re.search(r"/job/\d+", href) and len(title_candidate) >= 5:
+                    link_el = a
+                    break
         if not link_el:
             continue
+
         title = text(link_el)
+        href = link_el.get("href", "")
         if len(title) < 5:
             continue
-        card_text = text(row)
-        if not _matches_keywords(title, card_text):
+        if not re.search(r"/job/\d+", href) and not re.search(r"/jobs/", href, re.I):
             continue
-        href = link_el["href"]
+
+        card_text = text(row)
+        # Board is O&G-only; keep clinical roles even if keyword list is sparse
+        if not _matches_keywords(title, card_text):
+            if not any(
+                t in f"{title} {card_text}".lower()
+                for t in (
+                    "obstet",
+                    "gynaec",
+                    "gynec",
+                    "o&g",
+                    "ranzcog",
+                    "franzcog",
+                    "trainee",
+                    "fellow",
+                    "consultant",
+                    "specialist",
+                    "registrar",
+                )
+            ):
+                continue
+
+        company_el = row.select_one(
+            ".listing-item__info--item-company, .listing-item__info--item-company a"
+        )
+        location_el = row.select_one(".listing-item__info--item-location")
+        hospital = text(company_el) if company_el else cfg.get("hospital", "RANZCOG")
+        location = text(location_el) if location_el else "Australia"
+
         link = absolute_url(base_url, href)
         if link in seen:
             continue
         seen.add(link)
+
         job = build_job(
             title=title,
             link=link,
             base_url=base_url,
             portal_key="ranzcog",
             card_text=card_text,
-            specialty=detect_specialty(card_text) or "Obstetrics & Gynaecology",
-            hospital=cfg.get("hospital", ""),
+            hospital=hospital or cfg.get("hospital", "RANZCOG"),
+            location=location,
             state=cfg.get("state", "Australia"),
         )
         if job:
+            job.specialty = detect_specialty(card_text) or "Obstetrics & Gynaecology"
             jobs.append(job)
-    return jobs[:50]
+    return jobs[:80]
 
 
 def parse_pageup_sa(html: str, base_url: str, hospital: str = "SA Health") -> list[JobRecord]:

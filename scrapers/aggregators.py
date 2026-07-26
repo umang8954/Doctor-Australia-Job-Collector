@@ -45,7 +45,7 @@ def _score_jobs(jobs: list[JobRecord]) -> list[JobRecord]:
 
 
 def scrape_jobradars() -> list[JobRecord]:
-    """JobRadars — Playwright stealth primary; optional skip in CI."""
+    """JobRadars — try alternate hosts; Playwright stealth; NSW Health fallback via entry wrapper."""
     if config.JOBRADARS_SKIP_IN_CI and (
         os.environ.get("GITHUB_ACTIONS") == "true" or os.environ.get("CI")
     ):
@@ -56,50 +56,59 @@ def scrape_jobradars() -> list[JobRecord]:
     cfg = config.PORTAL_CONFIG["jobradars"]
     env = get_runtime_environment()
     last_reason = ""
+    search_urls = [
+        cfg["search_url"],
+        "https://www.jobradars.com/jobs?q=registrar+medical&l=Australia",
+        "https://au.jobradars.com/jobs?q=registrar+medical",
+    ]
 
-    try:
-        html = fetch_with_playwright(
-            cfg["search_url"],
-            label="jobradars",
-            stealth=True,
-            wait_until="networkidle",
-            referer="https://www.google.com.au/",
-        )
-        analysis = analyze_html(html)
-        jobs = parse_job_cards(
-            html,
-            cfg["base_url"],
-            "jobradars",
-            selectors=[".job-card", ".job-listing", "article", ".result", "a[href*='/job']"],
-        )
-        au_jobs = _filter_au_jobs(jobs)
-        if au_jobs:
-            return _score_jobs(au_jobs)
-        last_reason = failure_reason_from_analysis(analysis, len(au_jobs))
-    except Exception as exc:  # noqa: BLE001
-        last_reason = f"playwright_{type(exc).__name__}: {str(exc)[:100]}"
+    for url in search_urls:
+        base = "/".join(url.split("/")[:3])
+        try:
+            html = fetch_with_playwright(
+                url,
+                label="jobradars",
+                stealth=True,
+                wait_until="domcontentloaded",
+                referer="https://www.google.com.au/",
+            )
+            analysis = analyze_html(html)
+            if analysis.is_error_page or analysis.is_blocked:
+                last_reason = failure_reason_from_analysis(analysis, 0)
+                continue
+            jobs = parse_job_cards(
+                html,
+                base,
+                "jobradars",
+                selectors=[".job-card", ".job-listing", "article", ".result", "a[href*='/job']"],
+            )
+            au_jobs = _filter_au_jobs(jobs)
+            if au_jobs:
+                return _score_jobs(au_jobs)
+            last_reason = failure_reason_from_analysis(analysis, len(au_jobs))
+        except Exception as exc:  # noqa: BLE001
+            last_reason = f"playwright_{type(exc).__name__}: {str(exc)[:100]}"
 
-    try:
-        html, status = fetch_html_with_status(cfg["search_url"], label="jobradars", raise_for_status=False)
-        analysis = analyze_html(html, status_code=status)
-        if analysis.is_blocked:
-            raise RuntimeError(f"blocked: JobRadars 403 from {env}")
-        jobs = parse_job_cards(
-            html,
-            cfg["base_url"],
-            "jobradars",
-            selectors=[".job-card", ".job-listing", "article", ".result"],
-        )
-        au_jobs = _filter_au_jobs(jobs)
-        if au_jobs:
-            return _score_jobs(au_jobs)
-        last_reason = failure_reason_from_analysis(analysis, len(au_jobs))
-    except RuntimeError:
-        raise
-    except Exception as exc:  # noqa: BLE001
-        last_reason = f"static_{type(exc).__name__}: {str(exc)[:100]}"
+        try:
+            html, status = fetch_html_with_status(url, label="jobradars", raise_for_status=False)
+            analysis = analyze_html(html, status_code=status)
+            if analysis.is_blocked or analysis.is_error_page:
+                last_reason = failure_reason_from_analysis(analysis, 0)
+                continue
+            jobs = parse_job_cards(
+                html,
+                base,
+                "jobradars",
+                selectors=[".job-card", ".job-listing", "article", ".result"],
+            )
+            au_jobs = _filter_au_jobs(jobs)
+            if au_jobs:
+                return _score_jobs(au_jobs)
+            last_reason = failure_reason_from_analysis(analysis, len(au_jobs))
+        except Exception as exc:  # noqa: BLE001
+            last_reason = f"static_{type(exc).__name__}: {str(exc)[:100]}"
 
-    raise RuntimeError(f"blocked: JobRadars forbidden from {env} — {last_reason}")
+    raise RuntimeError(f"blocked: JobRadars unavailable from {env} — {last_reason}")
 
 
 def _filter_au_jobs(jobs: list[JobRecord]) -> list[JobRecord]:
