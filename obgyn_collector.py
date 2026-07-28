@@ -32,7 +32,9 @@ from scrapers.base import (
 
 PROFILE_TAG = "Obstetrics and Gynaecology Registrar / OBGYN"
 OUTPUT_PATH = config.REPO_ROOT / "OBGYN_Job_Tracker.xlsx"
-COLUMNS = list(config.SHEET_COLUMNS)
+# OBGYN tracker drops the resume-matching columns (Best Profile, Match %) that
+# only make sense for the multi-specialty main Job_Tracker.xlsx.
+COLUMNS = [c for c in config.SHEET_COLUMNS if c not in ("Best Profile", "Match %")]
 
 OBGYN_KEYWORDS = [
     "OBGYN Registrar",
@@ -42,36 +44,97 @@ OBGYN_KEYWORDS = [
     "Obstetrics & Gynaecology Registrar",
 ]
 
-# Broader match terms used when filtering titles/descriptions
-OBGYN_MATCH_TERMS = (
-    "obgyn",
+# Unambiguous O&G terms — presence in the title alone confirms relevance.
+OBGYN_STRONG_TERMS = (
+    "obstetrics and gynaecology",
+    "obstetrics & gynaecology",
+    "obstetric and gynaecology",
+    "obstetric & gynaecology",
+    "obstetrics and gynecology",
+    "obstetrics & gynecology",
     "o&g",
     "o & g",
-    "obstetric",
-    "gynaecol",
-    "gynecol",
+    "obgyn",
+    "ob-gyn",
+    "gynaecology",
+    "gynecology",
+    "gynaecologist",
+    "gynecologist",
+    "obstetrician",
+    "franzcog",
     "ranzcog",
-    "maternity",
-    "midwifery medical",
-    "women's health",
-    "womens health",
 )
 
-# Role-level terms (prefer registrar-family for this profile, but keep consultants/fellows)
+# Ambiguous terms — only count as OBGYN when paired with a genuine clinical role term.
+OBGYN_WEAK_TERMS = (
+    "obstetric",
+    "obstetrics",
+    "maternity",
+    "women's health",
+    "womens health",
+    "midwifery medical",
+)
+
+# Doctor-level role/seniority terms that confirm a clinical (not admin) position.
 OBGYN_ROLE_TERMS = (
     "registrar",
     "senior registrar",
     "fellow",
     "consultant",
     "staff specialist",
+    "senior medical officer",
+    "smo",
     "obstetrician",
     "gynaecologist",
     "gynecologist",
     "pho",
     "principal house officer",
     "rmo",
+    "resident medical officer",
     "medical officer",
+    "vmo",
+    "visiting medical officer",
+    "director",
 )
+
+# Titles containing these are always excluded — non-clinical/admin support roles,
+# regardless of what specialty terms also appear.
+OBGYN_NON_CLINICAL_TERMS = (
+    "secretary",
+    "support officer",
+    "administrative assistant",
+    "admin officer",
+    "administration officer",
+    "receptionist",
+    "booking officer",
+    "ward clerk",
+    "data entry",
+    "scheduler",
+)
+
+# If one of these other-specialty terms appears alongside only a *weak* O&G
+# mention, the role is a generalist/multi-specialty position, not O&G-specific.
+_OG_SPECIALTY_PHRASES = {
+    "obstetrics & gynaecology", "obstetrics and gynaecology", "obstetrics and gynecology",
+    "obstetrics", "gynaecology", "gynecology", "o&g",
+}
+OBGYN_OTHER_SPECIALTY_TERMS = tuple(
+    kw for kw in config.SPECIALTY_KEYWORDS if kw not in _OG_SPECIALTY_PHRASES
+) + ("surgical", "surgery", "renal", "rural generalist", "district medical officer")
+
+# Scraper noise / navigation boilerplate occasionally mistaken for a job title.
+_JUNK_TITLE_PATTERN = re.compile(
+    r"^(skip to|back to|view all jobs|search results|sign in|log in|load more|"
+    r"show more|filter results|sort by|subscribe|cookie|privacy policy)\b",
+    re.I,
+)
+
+
+def _clean_title(title: str) -> str:
+    """Strip stray URL-path fragments occasionally fused onto scraped titles."""
+    if not title:
+        return title
+    return re.sub(r"(?<=\S)/[a-z][a-z0-9\-]*/?\s*$", "", title).strip()
 
 
 def normalize_url(url: str) -> str:
@@ -83,6 +146,21 @@ def normalize_url(url: str) -> str:
         parsed = urlparse(url)
     except Exception:  # noqa: BLE001
         return url.lower().rstrip("/")
+
+    netloc = parsed.netloc.lower()
+    path = parsed.path.rstrip("/") or "/"
+    if "jobs.nt.gov.au" in netloc and "jobdetails" in path.lower():
+        # NT jobs are referenced both as /Home/JobDetails/{id} (legacy) and
+        # /Home/JobDetails?rtfId={id} (current) — collapse both to one key.
+        query_params = {k.lower(): v for k, v in parse_qsl(parsed.query, keep_blank_values=True)}
+        rtf_id = query_params.get("rtfid")
+        if not rtf_id:
+            m = re.search(r"(\d+)\s*$", path)
+            if m:
+                rtf_id = m.group(1)
+        if rtf_id:
+            return f"https://jobs.nt.gov.au/home/jobdetails?rtfid={rtf_id}"
+
     query = [
         (k, v)
         for k, v in parse_qsl(parsed.query, keep_blank_values=True)
@@ -98,21 +176,66 @@ def normalize_url(url: str) -> str:
     return urlunparse(cleaned)
 
 
-def is_obgyn_job(title: str, specialty: str = "", description: str = "") -> bool:
-    blob = f"{title} {specialty} {description}".lower()
-    blob = (
-        blob.replace("&amp;", "&")
+def _normalize_blob(text_: str) -> str:
+    return (
+        text_.lower()
+        .replace("&amp;", "&")
         .replace("&#38;", "&")
-        .replace(" and ", " ")
-        .replace("  ", " ")
+        .replace("’", "'")
     )
-    if not any(term in blob for term in OBGYN_MATCH_TERMS):
+
+
+def is_obgyn_job(title: str, specialty: str = "", description: str = "", portal: str = "") -> bool:
+    """Strict OBGYN-only filter — the job title must specifically name the
+    specialty; description/specialty-tag-only mentions don't qualify.
+
+    Exception: RANZCOG's own job board is O&G-specific by definition, so a
+    generic-sounding title sourced from it (e.g. a prevocational trainee
+    listing) still counts — the board itself is the strong signal."""
+    if not title or _JUNK_TITLE_PATTERN.match(title.strip()):
         return False
-    # Prefer clinical O&G roles; drop pure midwifery/nursing if no doctor terms
-    if re.search(r"\b(midwife|midwifery|nurse|nursing|enrolled nurse)\b", blob) and not any(
-        t in blob for t in OBGYN_ROLE_TERMS
-    ):
+
+    title_blob = _normalize_blob(title)
+    full_blob = _normalize_blob(f"{title} {specialty} {description}")
+
+    from_ranzcog_board = "ranzcog" in portal.lower()
+
+    # Non-clinical/admin support roles are never O&G doctor jobs, even on the RANZCOG board.
+    if any(t in title_blob for t in OBGYN_NON_CLINICAL_TERMS):
         return False
+
+    if from_ranzcog_board:
+        # A different college's own registrar/fellowship training post (e.g. RACGP
+        # GP training) isn't O&G-specific just because RANZCOG's board lists it.
+        if "racgp" in title_blob or "acrrm" in title_blob:
+            return False
+        return True
+
+    has_strong = any(t in title_blob for t in OBGYN_STRONG_TERMS)
+    has_weak = any(t in title_blob for t in OBGYN_WEAK_TERMS)
+    if not (has_strong or has_weak):
+        return False
+
+    # Midwifery/nursing roles are out of scope for this doctor-focused tracker.
+    if re.search(r"\b(midwife|midwifery|nurse|nursing|enrolled nurse)\b", title_blob):
+        if not any(t in full_blob for t in OBGYN_ROLE_TERMS):
+            return False
+        if re.match(r"^\s*(registered|enrolled)\s+(midwife|nurse)", title_blob):
+            return False
+
+    has_role = any(t in full_blob for t in OBGYN_ROLE_TERMS)
+
+    # An ambiguous mention (bare "obstetric", "maternity", "women's health")
+    # needs a real clinical role term attached, otherwise it's likely
+    # unrelated or an admin listing that happens to reference the department.
+    if not has_strong and not has_role:
+        return False
+
+    # If another specialty is named alongside only a weak O&G mention, this
+    # is a generalist/multi-specialty role, not an O&G-specific one.
+    if not has_strong and any(t in title_blob for t in OBGYN_OTHER_SPECIALTY_TERMS):
+        return False
+
     return True
 
 
@@ -188,9 +311,10 @@ def seed_from_job_tracker(logger: RunLogger) -> list[dict[str, str]]:
             title = _cell(ws, row, "Job Title", headers)
             link = _cell(ws, row, "Apply Link", headers)
             specialty = _cell(ws, row, "Specialty", headers)
+            row_portal = _cell(ws, row, "Portal", headers) or sheet_name
             if not title or not link:
                 continue
-            if not is_obgyn_job(title, specialty):
+            if not is_obgyn_job(title, specialty, portal=row_portal):
                 continue
             key = normalize_url(link)
             if not key or key in seen:
@@ -199,7 +323,7 @@ def seed_from_job_tracker(logger: RunLogger) -> list[dict[str, str]]:
             rows.append(_make_row(
                 title=title,
                 apply_link=link,
-                portal=_cell(ws, row, "Portal", headers) or sheet_name,
+                portal=row_portal,
                 specialty=specialty,
                 experience_level=_cell(ws, row, "Experience Level", headers),
                 hospital=_cell(ws, row, "Hospital", headers),
@@ -247,7 +371,7 @@ def scrape_existing_portals(logger: RunLogger) -> list[dict[str, str]]:
             jobs: list[JobRecord] = scrape_fn()
             kept = 0
             for job in jobs:
-                if not is_obgyn_job(job.title, job.specialty, job.description):
+                if not is_obgyn_job(job.title, job.specialty, job.description, portal=sheet):
                     continue
                 if not job.apply_link:
                     continue
@@ -388,9 +512,8 @@ def scrape_targeted_og_searches(logger: RunLogger) -> list[dict[str, str]]:
 
             kept = 0
             for job in jobs:
-                if not is_obgyn_job(job.title, job.specialty, job.description):
-                    if not any(t in job.title.lower().replace("&amp;", "&") for t in ("obstet", "gynaec", "gynec", "o&g", "obgyn")):
-                        continue
+                if not is_obgyn_job(job.title, job.specialty, job.description, portal=label):
+                    continue
                 if not job.apply_link:
                     continue
                 found.append(_row_from_job(job, label))
@@ -423,14 +546,12 @@ def scrape_seek(logger: RunLogger) -> list[dict[str, str]]:
             soup = soup_from_html(html)
             for a in soup.find_all("a", href=True):
                 href = a.get("href", "")
-                title = text(a)
+                title = _clean_title(text(a))
                 if len(title) < 8 or len(title) > 200:
                     continue
                 if "/job/" not in href.lower():
                     continue
-                if not is_obgyn_job(title) and not any(
-                    t in title.lower() for t in ("obstet", "gynaec", "gynec", "o&g", "obgyn", "ranzcog")
-                ):
+                if not is_obgyn_job(title):
                     continue
                 link = absolute_url("https://www.seek.com.au", href.split("?")[0])
                 found.append(_make_row(title=title, apply_link=link, portal="Seek"))
@@ -460,14 +581,12 @@ def scrape_jora(logger: RunLogger) -> list[dict[str, str]]:
             soup = soup_from_html(html)
             for a in soup.find_all("a", href=True):
                 href = a.get("href", "")
-                title = text(a)
+                title = _clean_title(text(a))
                 if len(title) < 8 or len(title) > 200:
                     continue
                 if not re.search(r"/job/|/j/", href, re.I):
                     continue
-                if not is_obgyn_job(title) and not any(
-                    t in title.lower() for t in ("obstet", "gynaec", "gynec", "o&g", "obgyn", "ranzcog")
-                ):
+                if not is_obgyn_job(title):
                     continue
                 link = absolute_url("https://au.jora.com", href.split("?")[0])
                 found.append(_make_row(title=title, apply_link=link, portal="Jora"))
