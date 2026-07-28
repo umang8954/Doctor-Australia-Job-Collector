@@ -58,8 +58,12 @@ KEYWORDS = [
     "obstetrics & gynaecology",
     "obstetrics and gynaecology",
     "obstetrics",
+    "obstetric",
+    "obstetrician",
     "gynaecology",
+    "gynaecolog",
     "gynecology",
+    "gynecolog",
     "o&g",
     "dermatology",
     "ophthalmology",
@@ -301,7 +305,9 @@ SMARTJOBS_SEARCH_URL = (
 )
 SMARTJOBS_SEARCH_KEYWORDS = ["registrar", "medical officer", "doctor"]
 
-JOBS_NT_SEARCH_KEYWORDS = ["medical", "doctor", "registrar", "health"]
+JOBS_NT_SEARCH_KEYWORDS = [
+    "medical", "doctor", "registrar", "health", "obstetrics", "gynaecology",
+]
 
 PORTAL_ZERO_STREAK_DISABLE = 3
 
@@ -490,6 +496,14 @@ PLATFORMS_TO_RUN = {
     "jobradars": True,
 
     "pageup": True,
+
+    "gv_health": True,
+
+    "awh": True,
+
+    "act_health": True,
+
+    "wave": True,
 
 }
 
@@ -754,6 +768,70 @@ PORTAL_CONFIG = {
         "search_url": "https://jobs.health.nsw.gov.au/jobs/search?q=registrar+medical",
 
         "method": "pageup",
+
+        "state": "Australia",
+
+        "hospital": "",
+
+    },
+
+    "gv_health": {
+
+        "sheet": "GV_Health",
+
+        "base_url": "https://careers.gvhealth.org.au",
+
+        "search_url": "https://careers.gvhealth.org.au/search/?q=registrar",
+
+        "method": "static",
+
+        "state": "VIC",
+
+        "hospital": "Goulburn Valley Health",
+
+    },
+
+    "awh": {
+
+        "sheet": "AWH",
+
+        "base_url": "https://careers.awh.org.au",
+
+        "search_url": "https://careers.awh.org.au/search/?q=registrar",
+
+        "method": "static",
+
+        "state": "VIC",
+
+        "hospital": "Albury Wodonga Health",
+
+    },
+
+    "act_health": {
+
+        "sheet": "ACT_Health",
+
+        "base_url": "https://acthealth.taleo.net",
+
+        "search_url": "https://acthealth.taleo.net/careersection/external/jobsearch.ftl?lang=en",
+
+        "method": "static",
+
+        "state": "ACT",
+
+        "hospital": "ACT Health / Canberra Health Services",
+
+    },
+
+    "wave": {
+
+        "sheet": "WAVE",
+
+        "base_url": "https://wave.com.au",
+
+        "search_url": "https://wave.com.au/job-listing",
+
+        "method": "static",
 
         "state": "Australia",
 

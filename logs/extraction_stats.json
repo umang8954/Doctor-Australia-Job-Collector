@@ -346,38 +346,8 @@
           "methods": [
             {
               "method": "playwright",
-              "jobs": 22,
-              "seconds": 9.88,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 22,
-              "seconds": 8.56,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
               "jobs": 19,
-              "seconds": 9.23,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 20,
-              "seconds": 10.39,
+              "seconds": 12.23,
               "error": ""
             }
           ]
@@ -746,38 +716,8 @@
           "methods": [
             {
               "method": "static_html",
-              "jobs": 22,
-              "seconds": 5.21,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 22,
-              "seconds": 4.15,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
               "jobs": 20,
-              "seconds": 3.63,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 20,
-              "seconds": 5.66,
+              "seconds": 4.92,
               "error": ""
             }
           ]
@@ -1348,62 +1288,8 @@
           "methods": [
             {
               "method": "playwright",
-              "jobs": 0,
-              "seconds": 34.86,
-              "error": "parser_found_nothing: page loaded but no job cards parsed"
-            },
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 3.56,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 34.09,
-              "error": "parser_found_nothing: page loaded but no job cards parsed"
-            },
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 5.39,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 33.14,
-              "error": "parser_found_nothing: page loaded but no job cards parsed"
-            },
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 3.15,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 32.49,
-              "error": "parser_found_nothing: page loaded but no job cards parsed"
-            },
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 5.16,
+              "jobs": 7,
+              "seconds": 21.48,
               "error": ""
             }
           ]
@@ -1746,38 +1632,8 @@
           "methods": [
             {
               "method": "static_html",
-              "jobs": 13,
-              "seconds": 5.83,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 13,
-              "seconds": 5.83,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
               "jobs": 12,
-              "seconds": 3.45,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 12,
-              "seconds": 3.74,
+              "seconds": 9.24,
               "error": ""
             }
           ]
@@ -2120,38 +1976,8 @@
           "methods": [
             {
               "method": "static_html",
-              "jobs": 10,
-              "seconds": 4.94,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 10,
-              "seconds": 5.1,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
               "jobs": 9,
-              "seconds": 5.05,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 9,
-              "seconds": 5.11,
+              "seconds": 7.88,
               "error": ""
             }
           ]
@@ -2495,37 +2321,7 @@
             {
               "method": "static_html",
               "jobs": 7,
-              "seconds": 5.59,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 8,
-              "seconds": 3.55,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 7,
-              "seconds": 3.97,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 8,
-              "seconds": 4.72,
+              "seconds": 10.79,
               "error": ""
             }
           ]
@@ -2869,37 +2665,7 @@
             {
               "method": "static_html",
               "jobs": 23,
-              "seconds": 4.68,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 23,
-              "seconds": 3.13,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 23,
-              "seconds": 3.28,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 23,
-              "seconds": 4.2,
+              "seconds": 10.82,
               "error": ""
             }
           ]
@@ -3300,38 +3066,8 @@
           "methods": [
             {
               "method": "playwright",
-              "jobs": 40,
-              "seconds": 65.06,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 43,
-              "seconds": 66.26,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 39,
-              "seconds": 62.28,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 40,
-              "seconds": 65.96,
+              "jobs": 44,
+              "seconds": 116.95,
               "error": ""
             }
           ]
@@ -3720,38 +3456,8 @@
           "methods": [
             {
               "method": "playwright",
-              "jobs": 40,
-              "seconds": 107.94,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 37,
-              "seconds": 112.07,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
               "jobs": 36,
-              "seconds": 101.95,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 36,
-              "seconds": 101.48,
+              "seconds": 134.6,
               "error": ""
             }
           ]
@@ -4409,86 +4115,20 @@
             {
               "method": "playwright",
               "jobs": 0,
-              "seconds": 12.18,
+              "seconds": 18.39,
               "error": "zero_jobs_retry"
             },
             {
               "method": "playwright",
               "jobs": 0,
-              "seconds": 10.43,
+              "seconds": 27.09,
               "error": ""
             },
             {
               "method": "static_html",
               "jobs": 0,
-              "seconds": 5.4,
-              "error": "403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 10.87,
-              "error": "zero_jobs_retry"
-            },
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 10.6,
+              "seconds": 6.49,
               "error": ""
-            },
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 5.65,
-              "error": "403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 11.08,
-              "error": "zero_jobs_retry"
-            },
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 9.6,
-              "error": ""
-            },
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 3.54,
-              "error": "403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 11.29,
-              "error": "zero_jobs_retry"
-            },
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 9.82,
-              "error": ""
-            },
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 5.43,
-              "error": "403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
             }
           ]
         }
@@ -4820,38 +4460,8 @@
           "methods": [
             {
               "method": "playwright",
-              "jobs": 25,
-              "seconds": 13.6,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 25,
-              "seconds": 12.76,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
               "jobs": 24,
-              "seconds": 15.2,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 21,
-              "seconds": 13.78,
+              "seconds": 20.25,
               "error": ""
             }
           ]
@@ -5533,85 +5143,19 @@
             {
               "method": "static_html",
               "jobs": 0,
-              "seconds": 5.35,
+              "seconds": 4.88,
               "error": "zero_jobs_retry"
             },
             {
               "method": "static_html",
               "jobs": 0,
-              "seconds": 5.02,
+              "seconds": 4.67,
               "error": ""
             },
             {
               "method": "playwright",
-              "jobs": 0,
-              "seconds": 12.62,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 5.21,
-              "error": "zero_jobs_retry"
-            },
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 3.03,
-              "error": ""
-            },
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 11.65,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 5.51,
-              "error": "zero_jobs_retry"
-            },
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 5.36,
-              "error": ""
-            },
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 13.49,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 4.44,
-              "error": "zero_jobs_retry"
-            },
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 3.39,
-              "error": ""
-            },
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 11.95,
+              "jobs": 3,
+              "seconds": 16.49,
               "error": ""
             }
           ]
@@ -6189,37 +5733,7 @@
             {
               "method": "playwright",
               "jobs": 13,
-              "seconds": 11.47,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 13,
-              "seconds": 25.81,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 13,
-              "seconds": 24.33,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 14,
-              "seconds": 10.33,
+              "seconds": 53.21,
               "error": ""
             }
           ]
@@ -6630,38 +6144,8 @@
           "methods": [
             {
               "method": "playwright",
-              "jobs": 5,
-              "seconds": 17.14,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 5,
-              "seconds": 19.25,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
               "jobs": 4,
-              "seconds": 13.79,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 5,
-              "seconds": 14.29,
+              "seconds": 85.65,
               "error": ""
             }
           ]
@@ -7051,37 +6535,7 @@
             {
               "method": "pageup_html",
               "jobs": 8,
-              "seconds": 19.96,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "pageup_html",
-              "jobs": 7,
-              "seconds": 20.85,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "pageup_html",
-              "jobs": 8,
-              "seconds": 21.07,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "pageup_html",
-              "jobs": 9,
-              "seconds": 24.56,
+              "seconds": 35.07,
               "error": ""
             }
           ]
@@ -7486,38 +6940,8 @@
           "methods": [
             {
               "method": "mercury_html",
-              "jobs": 7,
-              "seconds": 15.62,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "mercury_html",
-              "jobs": 7,
-              "seconds": 15.43,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "mercury_html",
               "jobs": 6,
-              "seconds": 17.0,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "mercury_html",
-              "jobs": 6,
-              "seconds": 16.83,
+              "seconds": 19.54,
               "error": ""
             }
           ]

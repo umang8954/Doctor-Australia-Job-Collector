@@ -113,6 +113,69 @@ def scrape_rch() -> list[JobRecord]:
     return _scrape_static("rch")
 
 
+def scrape_gv_health() -> list[JobRecord]:
+    return _scrape_static("gv_health")
+
+
+def scrape_awh() -> list[JobRecord]:
+    return _scrape_static("awh")
+
+
+def scrape_act_health() -> list[JobRecord]:
+    """ACT Health — Taleo ATS. The search page renders results client-side and
+    ignores URL query params, so we fill the KEYWORD field and click search
+    via Playwright (see fetch_taleo_search) rather than loading a static URL.
+    """
+    cfg = config.PORTAL_CONFIG["act_health"]
+    from scrapers.base import fetch_taleo_search, soup_from_html, text, absolute_url, build_job
+    from scrapers.portal_parsers import _matches_keywords
+    import re
+
+    keywords = ["obstetrics", "gynaecology", "registrar"]
+    jobs: list[JobRecord] = []
+    seen: set[str] = set()
+
+    for kw in keywords:
+        html = fetch_taleo_search(cfg["search_url"], kw)
+        soup = soup_from_html(html)
+        for a in soup.find_all("a", href=True):
+            href = a["href"]
+            title = text(a)
+            if len(title) < 8:
+                continue
+            if not re.search(r"jobdetail|requisition|/job/", href, re.I):
+                continue
+            link = absolute_url(cfg["base_url"], href)
+            if link in seen:
+                continue
+            if not _matches_keywords(title, title):
+                continue
+            seen.add(link)
+            job = build_job(
+                title=title,
+                link=link,
+                base_url=cfg["base_url"],
+                portal_key="act_health",
+                card_text=title,
+                hospital=cfg.get("hospital", ""),
+                state=cfg.get("state", ""),
+            )
+            if job:
+                jobs.append(job)
+
+    return _score_jobs(jobs)
+
+
+def scrape_wave() -> list[JobRecord]:
+    """WAVE — rural/regional locum & staff job listing (Australia-wide)."""
+    cfg = config.PORTAL_CONFIG["wave"]
+    html = fetch_html(cfg["search_url"], label="wave")
+    from scrapers.portal_parsers import parse_wave
+
+    jobs = parse_wave(html, cfg["base_url"])
+    return _score_jobs(jobs)
+
+
 HOSPITAL_SCRAPERS = {
     "monash_health": scrape_monash_health,
     "western_health": scrape_western_health,
@@ -122,4 +185,8 @@ HOSPITAL_SCRAPERS = {
     "grampians_health": scrape_grampians_health,
     "eastern_health": scrape_eastern_health,
     "rch": scrape_rch,
+    "gv_health": scrape_gv_health,
+    "awh": scrape_awh,
+    "act_health": scrape_act_health,
+    "wave": scrape_wave,
 }

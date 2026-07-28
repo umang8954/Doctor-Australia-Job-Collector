@@ -122,7 +122,8 @@ def _fetch_ranzcog_pages() -> tuple[list[JobRecord], str]:
             all_jobs.append(job)
 
     # AJAX "Load more" pages (HTML fragments of listing-item articles)
-    for page in range(2, 8):
+    empty_streak = 0
+    for page in range(2, 15):
         ajax_url = f"{base.rstrip('/')}/ajax/?action=request_for_listings&page={page}"
         try:
             polite_delay()
@@ -135,27 +136,37 @@ def _fetch_ranzcog_pages() -> tuple[list[JobRecord], str]:
                     "Accept": "text/html, */*; q=0.01",
                 },
             )
-            if r.status_code in (403, 429, 503):
+            if r.status_code in (429, 503):
                 last_reason = f"ajax_page{page}_HTTP{r.status_code}"
                 break
+            if r.status_code == 403:
+                empty_streak += 1
+                if empty_streak >= 2:
+                    break
+                continue
             frag = r.text or ""
             if len(frag.strip()) < 50:
-                break
+                empty_streak += 1
+                if empty_streak >= 2:
+                    break
+                continue
             page_jobs = parse_ranzcog(frag, base)
             if not page_jobs:
-                break
-            new = 0
+                empty_streak += 1
+                if empty_streak >= 2:
+                    break
+                continue
+            empty_streak = 0
             for job in page_jobs:
                 if job.apply_link in seen:
                     continue
                 seen.add(job.apply_link)
                 all_jobs.append(job)
-                new += 1
-            if new == 0:
-                break
         except Exception as exc:  # noqa: BLE001
             last_reason = f"ajax_page{page}_{type(exc).__name__}: {str(exc)[:80]}"
-            break
+            empty_streak += 1
+            if empty_streak >= 2:
+                break
 
     if all_jobs:
         return all_jobs, ""
