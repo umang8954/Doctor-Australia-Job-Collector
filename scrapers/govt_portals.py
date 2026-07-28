@@ -72,16 +72,51 @@ def scrape_jobs_nt() -> list[JobRecord]:
 
 def scrape_careers_vic() -> list[JobRecord]:
     cfg = config.PORTAL_CONFIG["careers_vic"]
-    html = fetch_with_playwright(cfg["search_url"], label="careers_vic")
-    from scrapers.base import parse_job_cards
+    urls = [
+        cfg["search_url"],
+        "https://www.careers.vic.gov.au/jobs?keywords=registrar+medical",
+    ]
+    from scrapers.base import parse_job_cards, soup_from_html, text, absolute_url, build_job
+    import re
 
-    jobs = parse_job_cards(
-        html,
-        cfg["base_url"],
-        "careers_vic",
-        selectors=[".job-result", ".search-result-item", "article"],
-    )
-    return _score_jobs(jobs)
+    for url in urls:
+        html = fetch_with_playwright(url, label="careers_vic", scroll=True)
+        jobs = parse_job_cards(
+            html,
+            cfg["base_url"],
+            "careers_vic",
+            selectors=[".job-result", ".search-result-item", "article", ".job-card", "a[href*='/job/']"],
+        )
+        if not jobs:
+            soup = soup_from_html(html)
+            seen: set[str] = set()
+            for a in soup.find_all("a", href=True):
+                href = a["href"]
+                title = text(a)
+                if len(title) < 8 or "/job/" not in href:
+                    continue
+                link = absolute_url("https://www.careers.vic.gov.au", href)
+                if link in seen:
+                    continue
+                seen.add(link)
+                from scrapers.portal_parsers import _matches_keywords
+                if not _matches_keywords(title, title):
+                    continue
+                job = build_job(
+                    title=title,
+                    link=link,
+                    base_url=cfg["base_url"],
+                    portal_key="careers_vic",
+                    card_text=title,
+                    hospital=cfg.get("hospital", ""),
+                    state=cfg.get("state", ""),
+                )
+                if job:
+                    jobs.append(job)
+        if jobs:
+            return _score_jobs(jobs)
+
+    return _score_jobs([])
 
 
 GOVT_SCRAPERS = {

@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import re
 from typing import Callable
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, unquote, urlsplit
 
 import config
-from job_utils import JobRecord, detect_experience_level, detect_specialty
+from job_utils import JobRecord, detect_experience_level, detect_specialty, detect_state
 from scrapers.base import absolute_url, build_job, soup_from_html, text
 
 
@@ -97,7 +97,7 @@ def parse_jobs_nt(html: str, base_url: str) -> list[JobRecord]:
                     rtf_id = m.group(1)
 
         if rtf_id:
-            link = f"{base_url.rstrip('/')}/Home/JobDetails/{rtf_id}"
+            link = f"{base_url.rstrip('/')}/Home/JobDetails?rtfId={rtf_id}"
         else:
             link = f"{base_url.rstrip('/')}/Home/Search"
 
@@ -196,7 +196,7 @@ def parse_ranzcog(html: str, base_url: str) -> list[JobRecord]:
         if job:
             job.specialty = detect_specialty(card_text) or "Obstetrics & Gynaecology"
             jobs.append(job)
-    return jobs[:80]
+    return jobs[:120]
 
 
 def parse_pageup_sa(html: str, base_url: str, hospital: str = "SA Health") -> list[JobRecord]:
@@ -383,6 +383,53 @@ def parse_mercy_workday_html(html: str, base_url: str) -> list[JobRecord]:
             card_text=title,
             hospital=cfg.get("hospital", ""),
             state=cfg.get("state", ""),
+        )
+        if job:
+            jobs.append(job)
+    return jobs[:50]
+
+
+def parse_wave(html: str, base_url: str) -> list[JobRecord]:
+    """WAVE (wave.com.au) — rural/regional locum & staff job listings.
+
+    Card links carry no visible text (title rendered via JS badges), so the
+    title is recovered from the URL slug; the surrounding job-listbox div
+    supplies specialty/location/date context for filtering.
+    """
+    soup = soup_from_html(html)
+    jobs: list[JobRecord] = []
+    seen: set[str] = set()
+    cfg = config.PORTAL_CONFIG.get("wave", {})
+
+    for a in soup.find_all("a", href=True):
+        href = a["href"]
+        if "/job-listing/" not in href:
+            continue
+        slug = urlsplit(href).path.rsplit("/job-listing/", 1)[-1]
+        title = unquote(slug).replace("+", " ").strip()
+        title = re.sub(r"\s*-\s*\d+$", "", title).strip()
+        if len(title) < 5:
+            continue
+
+        link = absolute_url(base_url, href)
+        if link in seen:
+            continue
+        seen.add(link)
+
+        parent = a.find_parent("div", class_=re.compile(r"job-listbox"))
+        card_text = text(parent) if parent else title
+        if not _matches_keywords(title, card_text):
+            continue
+
+        state = detect_state(card_text, "")
+        job = build_job(
+            title=title,
+            link=link,
+            base_url=base_url,
+            portal_key="wave",
+            card_text=card_text,
+            hospital=cfg.get("hospital", ""),
+            state=state or cfg.get("state", "Australia"),
         )
         if job:
             jobs.append(job)

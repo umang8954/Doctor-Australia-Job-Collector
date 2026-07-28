@@ -219,6 +219,35 @@ def fetch_nt_search(keyword: str, wait_ms: int = 10000) -> str:
     return html
 
 
+def fetch_taleo_search(url: str, keyword: str, wait_ms: int = 8000) -> str:
+    """Submit a keyword search on a Taleo careersection search form (e.g. ACT Health).
+
+    Taleo's search page loads results client-side; the KEYWORD/search
+    fields must be filled and clicked rather than passed as URL params.
+    """
+    from playwright.sync_api import sync_playwright
+
+    polite_delay()
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context(locale="en-AU", viewport=DEFAULT_VIEWPORT)
+        page = context.new_page()
+        page.goto(url, wait_until="networkidle", timeout=60000)
+        page.wait_for_timeout(3000)
+        kw_input = page.locator("#KEYWORD").first
+        if kw_input.count():
+            kw_input.fill(keyword)
+            search_btn = page.locator("#search").first
+            if search_btn.count():
+                search_btn.click()
+            else:
+                page.keyboard.press("Enter")
+            page.wait_for_timeout(wait_ms)
+        html = page.content()
+        browser.close()
+    return html
+
+
 def fetch_smartjobs_search(keyword: str, wait_ms: int = 10000) -> str:
     """Load SmartJobs QLD organ search and submit a keyword."""
     from playwright.sync_api import sync_playwright

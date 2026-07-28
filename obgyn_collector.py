@@ -2,8 +2,7 @@
 """
 OBGYN Job Tracker — dedicated collector for Obstetrics & Gynaecology Registrar roles.
 
-Creates/updates OBGYN_Job_Tracker.xlsx with columns:
-  Job Title | Profile Tag | Job URL
+Creates/updates OBGYN_Job_Tracker.xlsx with the same columns as Job_Tracker.xlsx.
 
 1. Seeds from existing Job_Tracker.xlsx O&G rows
 2. Scrapes project portals + Seek / Jora with O&G keywords
@@ -20,7 +19,7 @@ from urllib.parse import quote_plus, urlparse, urlunparse, parse_qsl, urlencode
 from openpyxl import Workbook, load_workbook
 
 import config
-from job_utils import JobRecord, RunLogger, now_aest, format_dt
+from job_utils import JobRecord, RunLogger, now_aest, format_dt, format_date
 from scrapers import ALL_SCRAPERS
 from scrapers.base import (
     absolute_url,
@@ -33,7 +32,7 @@ from scrapers.base import (
 
 PROFILE_TAG = "Obstetrics and Gynaecology Registrar / OBGYN"
 OUTPUT_PATH = config.REPO_ROOT / "OBGYN_Job_Tracker.xlsx"
-COLUMNS = ["Job Title", "Profile Tag", "Job URL"]
+COLUMNS = list(config.SHEET_COLUMNS)
 
 OBGYN_KEYWORDS = [
     "OBGYN Registrar",
@@ -117,8 +116,55 @@ def is_obgyn_job(title: str, specialty: str = "", description: str = "") -> bool
     return True
 
 
+def _cell(ws, row: int, col_name: str, headers: list) -> str:
+    try:
+        idx = headers.index(col_name) + 1
+    except ValueError:
+        return ""
+    val = ws.cell(row, idx).value
+    return "" if val is None else str(val).strip()
+
+
+def _make_row(
+    title: str,
+    apply_link: str,
+    portal: str = "",
+    specialty: str = "Obstetrics & Gynaecology",
+    experience_level: str = "",
+    hospital: str = "",
+    location: str = "",
+    state: str = "",
+    salary: str = "",
+    posted_date: str = "",
+    job_added_on: str = "",
+    best_profile: str = PROFILE_TAG,
+    match_pct: int = 0,
+    status: str = config.STATUS_NEW,
+    applied: str = "",
+) -> dict[str, str]:
+    if not job_added_on:
+        job_added_on = format_dt(now_aest())
+    return {
+        "Job Title": title,
+        "Specialty": specialty or "Obstetrics & Gynaecology",
+        "Experience Level": experience_level,
+        "Hospital": hospital,
+        "Location": location,
+        "State": state,
+        "Salary": salary,
+        "Posted Date": posted_date,
+        "Job Added On": job_added_on,
+        "Apply Link": apply_link,
+        "Portal": portal,
+        "Best Profile": best_profile,
+        "Match %": str(match_pct) if match_pct else "0",
+        "Status": status,
+        "Applied?": applied,
+    }
+
+
 def seed_from_job_tracker(logger: RunLogger) -> list[dict[str, str]]:
-    """Import O&G rows from Job_Tracker.xlsx as seed (Job Title, Profile Tag, Job URL)."""
+    """Import O&G rows from Job_Tracker.xlsx with all columns."""
     path = Path(config.EXCEL_FILE_PATH)
     if not path.exists():
         logger.log(f"Seed skipped — {path} not found")
@@ -128,7 +174,6 @@ def seed_from_job_tracker(logger: RunLogger) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     seen: set[str] = set()
 
-    # Prefer portal sheets to avoid double-counting All_Jobs; fall back to All_Jobs if needed
     portal_sheets = [s for s in wb.sheetnames if s in config.ALL_JOB_SOURCE_SHEETS]
     if not portal_sheets:
         portal_sheets = [config.ALL_JOBS_SHEET] if config.ALL_JOBS_SHEET in wb.sheetnames else []
@@ -136,17 +181,13 @@ def seed_from_job_tracker(logger: RunLogger) -> list[dict[str, str]]:
     for sheet_name in portal_sheets:
         ws = wb[sheet_name]
         headers = [ws.cell(1, c).value for c in range(1, ws.max_column + 1)]
-        try:
-            title_i = headers.index("Job Title") + 1
-            link_i = headers.index("Apply Link") + 1
-        except ValueError:
+        if "Job Title" not in headers or "Apply Link" not in headers:
             continue
-        spec_i = headers.index("Specialty") + 1 if "Specialty" in headers else None
 
         for row in range(2, ws.max_row + 1):
-            title = str(ws.cell(row, title_i).value or "").strip()
-            link = str(ws.cell(row, link_i).value or "").strip()
-            specialty = str(ws.cell(row, spec_i).value or "").strip() if spec_i else ""
+            title = _cell(ws, row, "Job Title", headers)
+            link = _cell(ws, row, "Apply Link", headers)
+            specialty = _cell(ws, row, "Specialty", headers)
             if not title or not link:
                 continue
             if not is_obgyn_job(title, specialty):
@@ -155,17 +196,43 @@ def seed_from_job_tracker(logger: RunLogger) -> list[dict[str, str]]:
             if not key or key in seen:
                 continue
             seen.add(key)
-            rows.append({
-                "Job Title": title,
-                "Profile Tag": PROFILE_TAG,
-                "Job URL": link,
-                "Source": "seed",
-                "Portal": sheet_name,
-            })
+            rows.append(_make_row(
+                title=title,
+                apply_link=link,
+                portal=_cell(ws, row, "Portal", headers) or sheet_name,
+                specialty=specialty,
+                experience_level=_cell(ws, row, "Experience Level", headers),
+                hospital=_cell(ws, row, "Hospital", headers),
+                location=_cell(ws, row, "Location", headers),
+                state=_cell(ws, row, "State", headers),
+                salary=_cell(ws, row, "Salary", headers),
+                posted_date=_cell(ws, row, "Posted Date", headers),
+                job_added_on=_cell(ws, row, "Job Added On", headers),
+                best_profile=_cell(ws, row, "Best Profile", headers) or PROFILE_TAG,
+                match_pct=int(float(_cell(ws, row, "Match %", headers) or "0")),
+                status=_cell(ws, row, "Status", headers),
+                applied=_cell(ws, row, "Applied?", headers),
+            ))
 
     wb.close()
     logger.log(f"Seed: {len(rows)} OBGYN jobs from Job_Tracker.xlsx")
     return rows
+
+
+def _row_from_job(job: JobRecord, portal: str) -> dict[str, str]:
+    return _make_row(
+        title=job.title,
+        apply_link=job.apply_link,
+        portal=portal,
+        specialty=job.specialty or "Obstetrics & Gynaecology",
+        experience_level=job.experience_level,
+        hospital=job.hospital,
+        location=job.location,
+        state=job.state,
+        salary=job.salary,
+        posted_date=format_date(job.posted_date) if job.posted_date else "",
+        match_pct=job.match_pct,
+    )
 
 
 def scrape_existing_portals(logger: RunLogger) -> list[dict[str, str]]:
@@ -184,13 +251,7 @@ def scrape_existing_portals(logger: RunLogger) -> list[dict[str, str]]:
                     continue
                 if not job.apply_link:
                     continue
-                found.append({
-                    "Job Title": job.title,
-                    "Profile Tag": PROFILE_TAG,
-                    "Job URL": job.apply_link,
-                    "Source": "scrape",
-                    "Portal": sheet,
-                })
+                found.append(_row_from_job(job, sheet))
                 kept += 1
             logger.log(f"  {portal_key}: {kept} OBGYN of {len(jobs)} raw")
         except Exception as exc:  # noqa: BLE001
@@ -241,7 +302,7 @@ def scrape_targeted_og_searches(logger: RunLogger) -> list[dict[str, str]]:
         {
             "label": "NSW_Health_OG",
             "portal_key": "pageup",
-            "url": "https://jobs.health.nsw.gov.au/jobs/search?q=obstetrics+gynaecology+registrar",
+            "url": "https://jobs.health.nsw.gov.au/jobs/search?q=obstetrics+gynaecology",
             "method": "static",
         },
         {
@@ -261,6 +322,30 @@ def scrape_targeted_og_searches(logger: RunLogger) -> list[dict[str, str]]:
             "portal_key": "ranzcog",
             "url": "https://jobs.ranzcog.edu.au/jobs",
             "method": "ranzcog_scraper",
+        },
+        {
+            "label": "GV_Health_OG",
+            "portal_key": "gv_health",
+            "url": "https://careers.gvhealth.org.au/search/?q=obstetrics+gynaecology",
+            "method": "static",
+        },
+        {
+            "label": "AWH_OG",
+            "portal_key": "awh",
+            "url": "https://careers.awh.org.au/search/?q=obstetrics+gynaecology",
+            "method": "static",
+        },
+        {
+            "label": "NSW_Health_OG_broad",
+            "portal_key": "pageup",
+            "url": "https://jobs.health.nsw.gov.au/jobs/search?q=obstetrics+gynaecology",
+            "method": "static",
+        },
+        {
+            "label": "WAVE_OG",
+            "portal_key": "wave",
+            "url": "https://wave.com.au/job-listing",
+            "method": "static",
         },
     ]
 
@@ -296,22 +381,19 @@ def scrape_targeted_og_searches(logger: RunLogger) -> list[dict[str, str]]:
                     from scrapers.portal_parsers import parse_ranzcog
 
                     jobs = parse_ranzcog(html, base) or jobs
+                if portal_key == "wave":
+                    from scrapers.portal_parsers import parse_wave
+
+                    jobs = parse_wave(html, base) or jobs
 
             kept = 0
             for job in jobs:
                 if not is_obgyn_job(job.title, job.specialty, job.description):
-                    # Targeted searches are already O&G-flavoured; keep registrar-family titles
                     if not any(t in job.title.lower().replace("&amp;", "&") for t in ("obstet", "gynaec", "gynec", "o&g", "obgyn")):
                         continue
                 if not job.apply_link:
                     continue
-                found.append({
-                    "Job Title": job.title,
-                    "Profile Tag": PROFILE_TAG,
-                    "Job URL": job.apply_link,
-                    "Source": "targeted",
-                    "Portal": label,
-                })
+                found.append(_row_from_job(job, label))
                 kept += 1
             logger.log(f"  {label}: {kept} jobs")
         except Exception as exc:  # noqa: BLE001
@@ -351,13 +433,7 @@ def scrape_seek(logger: RunLogger) -> list[dict[str, str]]:
                 ):
                     continue
                 link = absolute_url("https://www.seek.com.au", href.split("?")[0])
-                found.append({
-                    "Job Title": title,
-                    "Profile Tag": PROFILE_TAG,
-                    "Job URL": link,
-                    "Source": "scrape",
-                    "Portal": "Seek",
-                })
+                found.append(_make_row(title=title, apply_link=link, portal="Seek"))
         except Exception as exc:  # noqa: BLE001
             logger.log(f"  Seek failed ({q}): {exc}")
     return found
@@ -394,32 +470,22 @@ def scrape_jora(logger: RunLogger) -> list[dict[str, str]]:
                 ):
                     continue
                 link = absolute_url("https://au.jora.com", href.split("?")[0])
-                found.append({
-                    "Job Title": title,
-                    "Profile Tag": PROFILE_TAG,
-                    "Job URL": link,
-                    "Source": "scrape",
-                    "Portal": "Jora",
-                })
+                found.append(_make_row(title=title, apply_link=link, portal="Jora"))
         except Exception as exc:  # noqa: BLE001
             logger.log(f"  Jora failed ({q}): {exc}")
     return found
 
 
 def dedupe_by_url(rows: Iterable[dict[str, str]]) -> list[dict[str, str]]:
-    """Keep first occurrence of each normalised Job URL."""
+    """Keep first occurrence of each normalised Apply Link."""
     seen: set[str] = set()
     unique: list[dict[str, str]] = []
     for row in rows:
-        key = normalize_url(row.get("Job URL", ""))
+        key = normalize_url(row.get("Apply Link", ""))
         if not key or key in seen:
             continue
         seen.add(key)
-        unique.append({
-            "Job Title": row["Job Title"],
-            "Profile Tag": row.get("Profile Tag") or PROFILE_TAG,
-            "Job URL": row["Job URL"],
-        })
+        unique.append(row)
     return unique
 
 
@@ -429,9 +495,8 @@ def write_excel(rows: list[dict[str, str]], path: Path = OUTPUT_PATH) -> None:
     ws.title = "OBGYN_Jobs"
     ws.append(COLUMNS)
     for row in rows:
-        ws.append([row["Job Title"], row["Profile Tag"], row["Job URL"]])
+        ws.append([row.get(col, "") for col in COLUMNS])
 
-    # Meta sheet for audit
     meta = wb.create_sheet("Run_Info")
     meta.append(["Field", "Value"])
     meta.append(["Profile", PROFILE_TAG])
