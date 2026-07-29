@@ -146,7 +146,10 @@ def _scrape_mercy_workday_api() -> tuple[list[JobRecord], str]:
             if not title:
                 continue
             ext_path = safe_str(item.get("externalPath", ""))
-            link = absolute_url(base_url, ext_path) if ext_path else base_url
+            # The CXS API's externalPath omits the /en-US/{site} routing prefix
+            # (e.g. "/job/..." not "/en-US/External/job/...") — without it the
+            # link 404s even though the posting is live.
+            link = absolute_url(base_url, f"/en-US/{site}{ext_path}") if ext_path else base_url
             location = safe_str(item.get("locationsText", ""))
             combined = f"{title} {location}"
             job = JobRecord(

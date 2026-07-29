@@ -35,7 +35,11 @@ def scrape_smartjobs_qld() -> list[JobRecord]:
         if analysis.is_blocked or analysis.is_error_page:
             last_reason = failure_reason_from_analysis(analysis)
             continue
-        jobs = parse_smartjobs_results(html, cfg["base_url"])
+        # Job links on this page are relative to /jobtools/ (e.g.
+        # "jncustomsearch.viewFullSingle?..."), not the bare domain root —
+        # resolving against cfg["base_url"] silently dropped the /jobtools/
+        # segment and produced 404s. Resolve against the actual search URL.
+        jobs = parse_smartjobs_results(html, config.SMARTJOBS_SEARCH_URL)
         if not jobs:
             last_reason = failure_reason_from_analysis(analysis, 0)
         all_parsed.append(jobs)

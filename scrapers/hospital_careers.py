@@ -23,45 +23,79 @@ def _score_jobs(jobs: list[JobRecord]) -> list[JobRecord]:
     return filtered
 
 
+_HOSPITAL_CAREERS_SELECTORS = [
+    ".job-result",
+    ".job-listing",
+    ".search-result",
+    "article.job",
+    "li.job",
+    "tr.job",
+]
+_HOSPITAL_CAREERS_SELECTORS_PW = [
+    ".job-result",
+    ".job-listing",
+    ".search-result",
+    "article",
+    "[data-job-id]",
+]
+
+# All these hospital career sites run on the same PageUp platform, which
+# paginates via &startrow=N (25 results/page) — confirmed live on Monash
+# Health and RCH, which each have 50+ postings across multiple pages that a
+# single-page fetch would silently miss.
+_PAGEUP_PAGE_SIZE = 25
+_PAGEUP_MAX_PAGES = 4
+
+
+def _paginate_url(url: str, start_row: int) -> str:
+    sep = "&" if "?" in url else "?"
+    return f"{url}{sep}startrow={start_row}" if start_row else url
+
+
 def _scrape_static(portal_key: str) -> list[JobRecord]:
     cfg = config.PORTAL_CONFIG[portal_key]
-    html = fetch_html(cfg["search_url"], label=portal_key)
     from scrapers.base import parse_job_cards
 
-    jobs = parse_job_cards(
-        html,
-        cfg["base_url"],
-        portal_key,
-        selectors=[
-            ".job-result",
-            ".job-listing",
-            ".search-result",
-            "article.job",
-            "li.job",
-            "tr.job",
-        ],
-    )
-    return _score_jobs(jobs)
+    all_jobs: list[JobRecord] = []
+    seen_links: set[str] = set()
+    for page in range(_PAGEUP_MAX_PAGES):
+        start_row = page * _PAGEUP_PAGE_SIZE
+        html = fetch_html(_paginate_url(cfg["search_url"], start_row), label=portal_key)
+        page_jobs = parse_job_cards(
+            html, cfg["base_url"], portal_key, selectors=_HOSPITAL_CAREERS_SELECTORS
+        )
+        new_jobs = [j for j in page_jobs if j.apply_link not in seen_links]
+        if not new_jobs:
+            break
+        for j in new_jobs:
+            seen_links.add(j.apply_link)
+        all_jobs.extend(new_jobs)
+        if len(page_jobs) < _PAGEUP_PAGE_SIZE:
+            break
+    return _score_jobs(all_jobs)
 
 
 def _scrape_playwright(portal_key: str) -> list[JobRecord]:
     cfg = config.PORTAL_CONFIG[portal_key]
-    html = fetch_with_playwright(cfg["search_url"], label=portal_key)
     from scrapers.base import parse_job_cards
 
-    jobs = parse_job_cards(
-        html,
-        cfg["base_url"],
-        portal_key,
-        selectors=[
-            ".job-result",
-            ".job-listing",
-            ".search-result",
-            "article",
-            "[data-job-id]",
-        ],
-    )
-    return _score_jobs(jobs)
+    all_jobs: list[JobRecord] = []
+    seen_links: set[str] = set()
+    for page in range(_PAGEUP_MAX_PAGES):
+        start_row = page * _PAGEUP_PAGE_SIZE
+        html = fetch_with_playwright(_paginate_url(cfg["search_url"], start_row), label=portal_key)
+        page_jobs = parse_job_cards(
+            html, cfg["base_url"], portal_key, selectors=_HOSPITAL_CAREERS_SELECTORS_PW
+        )
+        new_jobs = [j for j in page_jobs if j.apply_link not in seen_links]
+        if not new_jobs:
+            break
+        for j in new_jobs:
+            seen_links.add(j.apply_link)
+        all_jobs.extend(new_jobs)
+        if len(page_jobs) < _PAGEUP_PAGE_SIZE:
+            break
+    return _score_jobs(all_jobs)
 
 
 def scrape_peninsula_health() -> list[JobRecord]:

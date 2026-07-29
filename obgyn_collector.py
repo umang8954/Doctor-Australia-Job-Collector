@@ -12,10 +12,12 @@ Creates/updates OBGYN_Job_Tracker.xlsx with the same columns as Job_Tracker.xlsx
 from __future__ import annotations
 
 import re
+import time
 from pathlib import Path
 from typing import Iterable
 from urllib.parse import quote_plus, urlparse, urlunparse, parse_qsl, urlencode
 
+import requests
 from openpyxl import Workbook, load_workbook
 
 import config
@@ -25,6 +27,7 @@ from scrapers.base import (
     absolute_url,
     fetch_html,
     fetch_with_playwright,
+    get_random_headers,
     parse_job_cards,
     soup_from_html,
     text,
@@ -608,6 +611,95 @@ def dedupe_by_url(rows: Iterable[dict[str, str]]) -> list[dict[str, str]]:
     return unique
 
 
+# Text that indicates a job page reports its own posting as closed/expired.
+_CLOSED_PHRASES = (
+    "no longer accept",
+    "position has been filled",
+    "this job is no longer",
+    "we are no longer",
+    "not currently accepting",
+    "vacancy has closed",
+    "job has closed",
+    "position is no longer available",
+    "closed for applications",
+    "sorry, this position",
+    "job no longer available",
+    "this vacancy is closed",
+    "this job has expired",
+    "job posting has expired",
+    "requisition has been cancelled",
+    '"postingavailable":false',
+    "postingavailable: false",
+)
+
+# A response this small for a "successful" fetch is almost always an error
+# shell, WAF interstitial, or empty search-results page, not a real job page.
+_MIN_PLAUSIBLE_JOB_PAGE_LEN = 1500
+
+
+def _check_url_live(url: str) -> tuple[bool, str]:
+    """Fetch a job URL for real and classify it as live or not.
+
+    Returns (is_live, reason). Network-level errors (timeout, connection
+    reset) are treated as inconclusive/live — a transient blip shouldn't
+    delete a job — but a definitive HTTP response (404/403/410/expired
+    text) removes it.
+    """
+    try:
+        resp = requests.get(
+            url,
+            headers=get_random_headers(),
+            timeout=20,
+            allow_redirects=True,
+        )
+    except requests.RequestException as exc:
+        return True, f"inconclusive ({type(exc).__name__}) — kept"
+
+    if resp.status_code >= 400:
+        return False, f"HTTP {resp.status_code}"
+
+    blob = resp.text.lower()
+    for phrase in _CLOSED_PHRASES:
+        if phrase in blob:
+            return False, f"closed/expired ({phrase})"
+
+    if len(resp.text) < _MIN_PLAUSIBLE_JOB_PAGE_LEN:
+        return False, f"page too small to be a real job page ({len(resp.text)} bytes)"
+
+    return True, "OK"
+
+
+def validate_links_live(rows: list[dict[str, str]], logger: RunLogger) -> list[dict[str, str]]:
+    """Actually fetch every Apply Link and drop rows that don't resolve to a
+    live job page (404/403/410, closed/expired postings, dead redirects).
+    This is the final safety net — root-cause scraper bugs should already be
+    fixed at the source, but portals also close jobs between our scrape and
+    now, and this catches that independent of any one scraper's logic."""
+    kept: list[dict[str, str]] = []
+    dropped: list[tuple[str, str, str]] = []
+
+    for i, row in enumerate(rows):
+        url = row.get("Apply Link", "")
+        title = row.get("Job Title", "")
+        portal = row.get("Portal", "")
+        if not url:
+            dropped.append((title, portal, "no URL"))
+            continue
+        is_live, reason = _check_url_live(url)
+        if is_live:
+            kept.append(row)
+        else:
+            dropped.append((title, portal, reason))
+        if (i + 1) % 10 == 0 or i + 1 == len(rows):
+            logger.log(f"  Link validation: {i + 1}/{len(rows)} checked")
+        time.sleep(0.4)
+
+    logger.log(f"Live link validation: {len(kept)} valid, {len(dropped)} removed")
+    for title, portal, reason in dropped:
+        logger.log(f"  REMOVED [{portal}] {reason}: {title}")
+    return kept
+
+
 def write_excel(rows: list[dict[str, str]], path: Path = OUTPUT_PATH) -> None:
     wb = Workbook()
     ws = wb.active
@@ -655,9 +747,12 @@ def main() -> int:
     all_rows.extend(jora_rows)
 
     unique = dedupe_by_url(all_rows)
-    write_excel(unique)
-
     logger.log(f"Raw rows: {len(all_rows)} | After URL dedupe: {len(unique)}")
+
+    logger.log("Validating every Apply Link is live...")
+    validated = validate_links_live(unique, logger)
+
+    write_excel(validated)
     logger.log(f"Saved: {OUTPUT_PATH}")
     logger.save()
 
@@ -666,7 +761,7 @@ def main() -> int:
     print(f"Profile: {PROFILE_TAG}")
     print(f"Seed: {len(seed)} | Scraped portals: {len(scraped)} | Targeted: {len(targeted)}")
     print(f"Seek: {len(seek_rows)} | Jora: {len(jora_rows)}")
-    print(f"Unique jobs (by URL): {len(unique)}")
+    print(f"Unique jobs (by URL): {len(unique)} | Live-validated: {len(validated)}")
     print(f"Excel: {OUTPUT_PATH}")
     print("=" * 56)
     return 0
