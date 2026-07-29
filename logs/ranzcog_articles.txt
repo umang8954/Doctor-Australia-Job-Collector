@@ -1,0 +1,196 @@
+=== article 0 ===
+<article class="media well listing-item listing-item__jobs">
+<div class="media-left listing-item__logo">
+<a class="listing-item__logo--wrapper" href="https://jobs.ranzcog.edu.au/job/1598/consultant-obstetrics-gynaecology/">
+<img alt="SA Health" class="media-object profile__img-company" src="https://jobs.ranzcog.edu.au/files/pictures/SAHealth4colourHorizontal_CMYK.jpg"/>
+</a>
+</div>
+<div class="media-body">
+<div class="listing-item__date">
+                            23/07/2026
+                         
+        </div>
+<a class="save-job" data-href="/saved-jobs/?id=1598&amp;action=save&amp;reload=✓" data-id="1598" data-target="#apply-modal" data-toggle="modal" href="#" rel="nofollow" title="Save"></a>
+<div class="media-heading listing-item__title">
+<a class="link" href="https://jobs.ranzcog.edu.au/job/1598/consultant-obstetrics-gynaecology/">Consultant - Obstetrics &amp; Gynaecology</a>
+</div>
+<div class="listing-item__info listing-item__info--item-salary-range clearfix">
+                $243,212 - $320,467 yearly
+            </div>
+<div class="listing-item__desc">
+                 
+   Barossa Hills Fleurieu Local Health Network       
+ 
+ 
+   Location: Mount Barker      
+ 
+ 
+   Total Indicative Remuneration:  MD2: $243,212 - $320,467          
+ 
+ 
+   Ongoing, Part-time – 15 hours per week      
+ 
+      
+   WHAT ARE WE OFFERING?      
+  We are seeking a dedicated Obstetrics and Gynaecology Clinician to join our team. This is an opportunity to make a meaningful difference in the lives of women and families by delivering high-quality care. You will provide specialist clinical services, guide the care of patients across a broad range of presentations, and use your expertise to influence positive outcomes. Through clinical leadership, mentoring of junior medical staff and active participation in multidisciplinary care, you will help shape a culture of excellence, compassion and continuous improvement.   
+  You will be part of a team committed to advancing healthcare throug
+TEXT: 23/07/2026 Consultant - Obstetrics & Gynaecology $243,212 - $320,467 yearly Barossa Hills Fleurieu Local Health Network       
+ 
+ 
+   Location: Mount Barker      
+ 
+ 
+   Total Indicative Remuneration:  MD2: $243,212 - $320,467          
+ 
+ 
+   Ongoing, Part-time – 15 hours per week      
+ 
+      
+   WHAT ARE WE OFFERING?      
+  We are seeking a dedicated Obstetrics and Gynaecology Clinician to jo
+LINKS: [('', 'https://jobs.ranzcog.edu.au/job/1598/consultant-obstetrics-gynaecology/'), ('', '#'), ('Consultant - Obstetrics & Gynaecology', 'https://jobs.ranzcog.edu.au/job/1598/consultant-obstetrics-gynaecology/')]
+
+=== article 1 ===
+<article class="media well listing-item listing-item__jobs">
+<div class="media-left listing-item__logo">
+<a class="listing-item__logo--wrapper" href="https://jobs.ranzcog.edu.au/job/1594/specialist-obstetrician-gynaecologist/">
+<img alt="GV Health" class="media-object profile__img-company" src="https://jobs.ranzcog.edu.au/files/pictures/GV_Logo_Portrait.jpg"/>
+</a>
+</div>
+<div class="media-body">
+<div class="listing-item__date">
+                            20/07/2026
+                         
+        </div>
+<a class="save-job" data-href="/saved-jobs/?id=1594&amp;action=save&amp;reload=✓" data-id="1594" data-target="#apply-modal" data-toggle="modal" href="#" rel="nofollow" title="Save"></a>
+<div class="media-heading listing-item__title">
+<a class="link" href="https://jobs.ranzcog.edu.au/job/1594/specialist-obstetrician-gynaecologist/">Specialist - Obstetrician &amp; Gynaecologist</a>
+</div>
+<div class="listing-item__info listing-item__info--item-salary-range clearfix">
+</div>
+<div class="listing-item__desc">
+                  Our Obstetrics and Gynaecology (O&amp;G) department is a multicultural team of specialists, midwives, health professionals and support staff, with a commitment to patient care in all areas of collaborative maternity care, obstetrics and gynaecology. We are a Level 5 Maternity unit, supported by theatre staff 24/7 situated alongside Birth Suite. Our Neonatology services are run by a full team of qualified Paediatricians. We are also the referral centre for smaller hospitals within our catchment area.  
+  Experience a great place to treat, learn and teach complex cases. Our Gynaecology service treats patients ranging from complex Urogynae problems to younger women with Chronic pain or Endometriosis.  We also do complex Gynaecological Endoscopic operating. Our clinics are well equipped with a state of the art Colposcope and ultrasound machines and theatres have new Lap towers with modern cameras. We also do MDT cases involving Urology, Colorectal o
+TEXT: 20/07/2026 Specialist - Obstetrician & Gynaecologist Our Obstetrics and Gynaecology (O&G) department is a multicultural team of specialists, midwives, health professionals and support staff, with a commitment to patient care in all areas of collaborative maternity care, obstetrics and gynaecology. We are a Level 5 Maternity unit, supported by theatre staff 24/7 situated alongside Birth Suite. Our 
+LINKS: [('', 'https://jobs.ranzcog.edu.au/job/1594/specialist-obstetrician-gynaecologist/'), ('', '#'), ('Specialist - Obstetrician & Gynaecologist', 'https://jobs.ranzcog.edu.au/job/1594/specialist-obstetrician-gynaecologist/')]
+
+=== article 2 ===
+<article class="media well listing-item listing-item__jobs">
+<div class="media-left listing-item__logo">
+<a class="listing-item__logo--wrapper" href="https://jobs.ranzcog.edu.au/job/1595/consultant-obstetrician-and-gynaecologist/">
+<img alt="SA Health" class="media-object profile__img-company" src="https://jobs.ranzcog.edu.au/files/pictures/SAHealth4colourHorizontal_CMYK.jpg"/>
+</a>
+</div>
+<div class="media-body">
+<div class="listing-item__date">
+                            20/07/2026
+                         
+        </div>
+<a class="save-job" data-href="/saved-jobs/?id=1595&amp;action=save&amp;reload=✓" data-id="1595" data-target="#apply-modal" data-toggle="modal" href="#" rel="nofollow" title="Save"></a>
+<div class="media-heading listing-item__title">
+<a class="link" href="https://jobs.ranzcog.edu.au/job/1595/consultant-obstetrician-and-gynaecologist/">Consultant Obstetrician and Gynaecologist</a>
+</div>
+<div class="listing-item__info listing-item__info--item-salary-range clearfix">
+                $582,506 - $752,559 yearly
+            </div>
+<div class="listing-item__desc">
+                 
+   Limestone Coast Local Health Network, Mount Gambier and Districts Health Service   
+   Indicative Total Remuneration: MD2 $582,506 to $752,559 p.a. (Pro-rata)   
+   Permanent Full time position available (part time hours to be considered), working over a 7 day roster   
+   Eligibility Open to Everyone    
+ 
+  **Indicative Total Remuneration includes award salary, remote call allowance, professional development, A&amp;R Allowance, Super, Private Practice Arrangements if applicable**    
+   About the Role   
+  Are you an experienced Obstetrician and Gynaecologist looking to make a meaningful impact in patient care and contribute to a collaborative healthcare environment? Join our team at Mount Gambier and Districts Health Service, where you’ll provide exceptional clinical services, contribute to teaching and research, and play an integral role in improving the healthcare e
+TEXT: 20/07/2026 Consultant Obstetrician and Gynaecologist $582,506 - $752,559 yearly Limestone Coast Local Health Network, Mount Gambier and Districts Health Service   
+   Indicative Total Remuneration: MD2 $582,506 to $752,559 p.a. (Pro-rata)   
+   Permanent Full time position available (part time hours to be considered), working over a 7 day roster   
+   Eligibility Open to Everyone    
+ 
+  **Indicat
+LINKS: [('', 'https://jobs.ranzcog.edu.au/job/1595/consultant-obstetrician-and-gynaecologist/'), ('', '#'), ('Consultant Obstetrician and Gynaecologist', 'https://jobs.ranzcog.edu.au/job/1595/consultant-obstetrician-and-gynaecologist/')]
+
+=== article 3 ===
+<article class="media well listing-item listing-item__jobs">
+<div class="media-left listing-item__logo">
+<a class="listing-item__logo--wrapper" href="https://jobs.ranzcog.edu.au/job/1588/obstetrician-gynaecologist/">
+<span class="image__fallback" title="Latrobe Regional Health">
+                    LR
+                </span>
+</a>
+</div>
+<div class="media-body">
+<div class="listing-item__date">
+                            17/07/2026
+                         
+        </div>
+<a class="save-job" data-href="/saved-jobs/?id=1588&amp;action=save&amp;reload=✓" data-id="1588" data-target="#apply-modal" data-toggle="modal" href="#" rel="nofollow" title="Save"></a>
+<div class="media-heading listing-item__title">
+<a class="link" href="https://jobs.ranzcog.edu.au/job/1588/obstetrician-gynaecologist/">Obstetrician &amp; Gynaecologist</a>
+</div>
+<div class="listing-item__info listing-item__info--item-salary-range clearfix">
+</div>
+<div class="listing-item__desc">
+                 
+ 
+   Are you seeking a rewarding and diverse O&amp;G Consultant role in a leading regional hospital? Join the Medical Services Team at Latrobe Regional Health, where we value our employees by providing a safe and supportive workplace culture that enables you to thrive.    
+   
+  Latrobe Regional Health is looking for  O&amp;G Consultant  to join our growing team on a  part time fixed term basis.   
+   
+  The Obstetrician &amp; Gynaecologist provides high-quality specialist obstetric and gynaecological care to patients of LRH across inpatients and outpatient settings. This senior medical role is responsible for delivering safe, evidence-based, person-centred care in accordance with clinical governance requirements, hospital policies and best-practice standards. In addition to direct clinical care, the Obstetrician &amp; Gynaecologist plays a key role in supervising and educating junior medical staff and students, supporting service development, and contributing to LRH strategic...
+            </div>
+<div 
+TEXT: LR 17/07/2026 Obstetrician & Gynaecologist Are you seeking a rewarding and diverse O&G Consultant role in a leading regional hospital? Join the Medical Services Team at Latrobe Regional Health, where we value our employees by providing a safe and supportive workplace culture that enables you to thrive.    
+   
+  Latrobe Regional Health is looking for  O&G Consultant  to join our growing team on a 
+LINKS: [('LR', 'https://jobs.ranzcog.edu.au/job/1588/obstetrician-gynaecologist/'), ('', '#'), ('Obstetrician & Gynaecologist', 'https://jobs.ranzcog.edu.au/job/1588/obstetrician-gynaecologist/')]
+
+=== article 4 ===
+<article class="media well listing-item listing-item__jobs">
+<div class="media-left listing-item__logo">
+<a class="listing-item__logo--wrapper" href="https://jobs.ranzcog.edu.au/job/1593/senior-medical-officer-obstetrics-and-gynaecology/">
+<span class="image__fallback" title="Department of Health">
+                    Do
+                </span>
+</a>
+</div>
+<div class="media-body">
+<div class="listing-item__date">
+                            16/07/2026
+                         
+        </div>
+<a class="save-job" data-href="/saved-jobs/?id=1593&amp;action=save&amp;reload=✓" data-id="1593" data-target="#apply-modal" data-toggle="modal" href="#" rel="nofollow" title="Save"></a>
+<div class="media-heading listing-item__title">
+<a class="link" href="https://jobs.ranzcog.edu.au/job/1593/senior-medical-officer-obstetrics-and-gynaecology/">Senior Medical Officer - Obstetrics and Gynaecology</a>
+</div>
+<div class="listing-item__info listing-item__info--item-salary-range clearfix">
+</div>
+<div class="listing-item__desc">
+                  Location:    Obstetrics and Gynaecology, Women and Children’s Services, Toowoomba Hospital, Toowoomba, Darling Downs Hospital and Health Service  
+
+   
+
+  Remuneration:    Multiple temporary full and/or part time positions up to 12 months with possible extension, hours negotiable, up to $481,935, (L18-L27)  
+
+   
+
+ Join a leading regional health service in Toowoomba as a Senior Medical Officer – Obstetrics and Gynaecology. Deliver high-quality care across women’s health services, support clinical excellence, and help shape positive outcomes for patients, families and communities. Enjoy meaningful work, strong professional connections and the opportunity to make a lasting impact.  
+
+   
+
+ You will receive a competitive remuneration package value up to $481,935 (L27) comprising salary rates between $106.39 (L18) and $134.90 (L27) p.h., motor vehicle allowance,...
+            </div>
+<div class="listing-item__info clearfix">
+<span class="listing-i
+TEXT: Do 16/07/2026 Senior Medical Officer - Obstetrics and Gynaecology Location:    Obstetrics and Gynaecology, Women and Children’s Services, Toowoomba Hospital, Toowoomba, Darling Downs Hospital and Health Service  
+
+   
+
+  Remuneration:    Multiple temporary full and/or part time positions up to 12 months with possible extension, hours negotiable, up to $481,935, (L18-L27)  
+
+   
+
+ Join a leading re
+LINKS: [('Do', 'https://jobs.ranzcog.edu.au/job/1593/senior-medical-officer-obstetrics-and-gynaecology/'), ('', '#'), ('Senior Medical Officer - Obstetrics and Gynaecology', 'https://jobs.ranzcog.edu.au/job/1593/senior-medical-officer-obstetrics-and-gynaecology/')]
+

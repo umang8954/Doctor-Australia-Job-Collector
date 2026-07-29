@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+	<meta name="keywords" content="RANZCOG Jobs Board, FRANZCOG Jobs, Associate Procedural Jobs, Obstetrician Jobs, Gynaecologist Jobs, O&amp;G Jobs">
+	<meta name="description" content="RANZCOG Jobs Board showcases specialist, trainee, subspecialist and GP Obstetrics &amp; Gynaecology roles across Australia, Aotearoa New Zealand and beyond.">
+	<meta name="viewport" content="width=device-width, height=device-height,
+                                   initial-scale=1.0, maximum-scale=1.0,
+                                   target-densityDpi=device-dpi">
+	<link rel="alternate" type="application/rss+xml" title="Jobs" href="https://jobs.ranzcog.edu.au/rss/">
+
+	<title>RANZCOG Jobs Board</title>
+
+
+	<!-- Bootstrap -->
+	<link href="https://cdn.smartjobboard.com/2026.03/templates/BreezeDND/assets/styles.css" rel="stylesheet">
+	<link href="https://jobs.ranzcog.edu.au/templates/BreezeDND/assets/style/styles.css?v=1774337701.0612" rel="stylesheet" id="styles">
+
+	<link rel="icon" href="https://jobs.ranzcog.edu.au/templates/BreezeDND/assets/images/RANZCOG-icon.jpg" type="image/x-icon" />
+<link href="https://cdn.smartjobboard.com/fonts/open-sans/style.css" rel="stylesheet" type="text/css" media="print" onload="this.media='all'; this.onload=null;">
+<link href="https://cdn.smartjobboard.com/fonts/open-sans/style.css" rel="stylesheet" type="text/css" media="print" onload="this.media='all'; this.onload=null;">
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="RANZCOG Jobs Board" />
+<meta property="og:url" content="https://jobs.ranzcog.edu.au/?ajax=1&amp;action=request_for_listings&amp;page=1" />
+<meta property="og:title" content="RANZCOG Jobs Board" />
+<meta property="og:description" content="RANZCOG Jobs Board showcases specialist, trainee, subspecialist and GP Obstetrics &amp; Gynaecology roles across Australia, Aotearoa New Zealand and beyond." />
+<meta property="og:image" content="https://jobs.ranzcog.edu.au/templates/BreezeDND/assets/images/RANZCOG%20Logo%20%28Primary%29%20-%20Horizontal%20-%20Full%20Colour%20RGB%20-%20Acronym%20Title%20with%20Strapline.png" />
+<meta name="twitter:image" content="https://jobs.ranzcog.edu.au/templates/BreezeDND/assets/images/RANZCOG%20Logo%20%28Primary%29%20-%20Horizontal%20-%20Full%20Colour%20RGB%20-%20Acronym%20Title%20with%20Strapline.png">
+<meta property="og:image" content="https://jobs.ranzcog.edu.au/templates/BreezeDND/assets/images/RANZCOG%20Logo%20%28Primary%29%20-%20Horizontal%20-%20Full%20Colour%20RGB%20-%20Acronym%20Title%20with%20Strapline.png" />
+<script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"WebSite","url":"https:\/\/jobs.ranzcog.edu.au","image":"https:\/\/jobs.ranzcog.edu.au\/templates\/BreezeDND\/assets\/images\/RANZCOG%20Logo%20%28Primary%29%20-%20Horizontal%20-%20Full%20Colour%20RGB%20-%20Acronym%20Title%20with%20Strapline.png","description":"RANZCOG Jobs Board showcases specialist, trainee, subspecialist and GP Obstetrics & Gynaecology roles across Australia, Aotearoa New Zealand and beyond.","keywords":"RANZCOG Jobs Board, FRANZCOG Jobs, Associate Procedural Jobs, Obstetrician Jobs, Gynaecologist Jobs, O&G Jobs","name":"RANZCOG Jobs Board","potentialAction":{"@type":"SearchAction","target":"https:\/\/jobs.ranzcog.edu.au\/jobs\/?q={q}","query-input":"required name=q"}}</script>
+            <!-- Global Site Tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-S66FLMDSQJ"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){ dataLayer.push(arguments); }
+            gtag('js', new Date());
+                            gtag('config', 'G-S66FLMDSQJ', { 'anonymize_ip': true });
+                                        gtag('config', 'UA-110320771-1', {
+                    'anonymize_ip': true,
+                    'dimension1': 'ranzcog.mysmartjobboard.com',
+                    'dimension2': 'BreezeDND'
+                });
+                    </script>
+            <script>
+    </script>	<style type="text/css">.main-sections__jobs-by--wrapper.container .browse-by__list li:nth-child(3n-1), .main-sections__jobs-by--wrapper.container .browse-by__list li:nth-child(3n+3) {
+     margin-left: 0;
+}
+
+/*.main-sections__jobs-by--wrapper.container .browse-by__list li {
+    width: 40%;
+}*/
+
+body > div.widgets__container > div:nth-child(2) > div > section > div > ul {
+     font-size: 12px; 
+}
+body > div.widgets__container > div:nth-child(2) > div > section > div > ul .browse-by__item {
+    max-width: 95%;
+  	white-space: unset;
+  	overflow: unset;
+  	text-overflow: unset;
+}
+
+.browse-by__item {
+  	font-

@@ -1,0 +1,17 @@
+<div class="quick-search has-location">
+	<div class="quick-search__wrapper">
+		<form action="https://jobs.ranzcog.edu.au/jobs/" class="form-inline row" target="_top">
+			<div class="form-group form-group__input ">
+				<input type="text" value="" class="form-control" name="q" id="keywords" placeholder="Keywords" />
+			</div>
+							<div class="form-group form-group__input">
+					<label for="Location" class="form-label sr-only">Location</label>
+<input type="text" name="l" id="Location" class="form-control form-control__google-location" value="" placeholder="Location"/>
+<input type="hidden" name="r" disabled />
+				</div>
+																																									<div class="form-group form-group__btn">
+				<button type="submit" class="quick-search__find btn btn__orange btn__bold ">Find Jobs</button>
+			</div>
+		</form>
+	</div>
+</div>
