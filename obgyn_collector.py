@@ -21,7 +21,15 @@ import requests
 from openpyxl import Workbook, load_workbook
 
 import config
-from job_utils import JobRecord, RunLogger, now_aest, format_dt, format_date
+from job_utils import (
+    JobRecord,
+    RunLogger,
+    detect_experience_level,
+    detect_state,
+    format_date,
+    format_dt,
+    now_aest,
+)
 from scrapers import ALL_SCRAPERS
 from scrapers.base import (
     absolute_url,
@@ -527,6 +535,63 @@ def scrape_targeted_og_searches(logger: RunLogger) -> list[dict[str, str]]:
     return found
 
 
+_AU_STATE_ALTERNATION = "NSW|VIC|QLD|WA|SA|TAS|ACT|NT"
+
+_SEEK_CARD_PATTERN = re.compile(
+    r"\bat\s+(.+?)\s+(?:Be an early applicant\s+)?This is an?\s+.+?\s+job\s+(.+?)\s+"
+    rf"({_AU_STATE_ALTERNATION})\b"
+)
+_STATE_ANCHOR_PATTERN = re.compile(rf"\b({_AU_STATE_ALTERNATION})\b")
+
+
+def _card_text_for(a) -> str:
+    """Walk up a few ancestor levels to find the listing card containing
+    company/location context around a bare title anchor."""
+    node = a
+    best = ""
+    for _ in range(4):
+        node = node.find_parent(["article", "li", "div"])
+        if not node:
+            break
+        candidate = text(node)
+        if len(candidate) > len(best):
+            best = candidate
+        if len(candidate) > 400:
+            break
+    return best
+
+
+def _seek_card_info(card_text: str) -> dict[str, str]:
+    m = _SEEK_CARD_PATTERN.search(card_text)
+    if m:
+        return {
+            "hospital": m.group(1).strip(" ,-"),
+            "location": m.group(2).strip(" ,-"),
+            "state": m.group(3).strip(),
+        }
+    return {"hospital": "", "location": "", "state": detect_state(card_text)}
+
+
+def _jora_card_info(card_text: str, title: str) -> dict[str, str]:
+    remainder = re.sub(r"^(new to you|featured|sponsored)\s+", "", card_text, flags=re.I).strip()
+    for _ in range(2):  # title text is often duplicated in Jora's markup
+        if remainder.startswith(title):
+            remainder = remainder[len(title):].strip()
+
+    m = _STATE_ANCHOR_PATTERN.search(remainder)
+    if not m:
+        return {"hospital": "", "location": "", "state": detect_state(card_text)}
+    state = m.group(1)
+    before = remainder[: m.start()].strip()
+    words = before.split()
+    if len(words) > 2:
+        location = " ".join(words[-2:])
+        hospital = " ".join(words[:-2])
+    else:
+        location, hospital = before, ""
+    return {"hospital": hospital.strip(" ,-"), "location": location.strip(" ,-"), "state": state}
+
+
 def scrape_seek(logger: RunLogger) -> list[dict[str, str]]:
     """Seek Australia — O&G registrar keyword searches (static first; Playwright fallback)."""
     found: list[dict[str, str]] = []
@@ -557,7 +622,17 @@ def scrape_seek(logger: RunLogger) -> list[dict[str, str]]:
                 if not is_obgyn_job(title):
                     continue
                 link = absolute_url("https://www.seek.com.au", href.split("?")[0])
-                found.append(_make_row(title=title, apply_link=link, portal="Seek"))
+                card_text = _card_text_for(a)
+                info = _seek_card_info(card_text)
+                found.append(_make_row(
+                    title=title,
+                    apply_link=link,
+                    portal="Seek",
+                    hospital=info["hospital"],
+                    location=info["location"],
+                    state=info["state"],
+                    experience_level=detect_experience_level(f"{title} {card_text}"),
+                ))
         except Exception as exc:  # noqa: BLE001
             logger.log(f"  Seek failed ({q}): {exc}")
     return found
@@ -592,7 +667,17 @@ def scrape_jora(logger: RunLogger) -> list[dict[str, str]]:
                 if not is_obgyn_job(title):
                     continue
                 link = absolute_url("https://au.jora.com", href.split("?")[0])
-                found.append(_make_row(title=title, apply_link=link, portal="Jora"))
+                card_text = _card_text_for(a)
+                info = _jora_card_info(card_text, title)
+                found.append(_make_row(
+                    title=title,
+                    apply_link=link,
+                    portal="Jora",
+                    hospital=info["hospital"],
+                    location=info["location"],
+                    state=info["state"],
+                    experience_level=detect_experience_level(f"{title} {card_text}"),
+                ))
         except Exception as exc:  # noqa: BLE001
             logger.log(f"  Jora failed ({q}): {exc}")
     return found
