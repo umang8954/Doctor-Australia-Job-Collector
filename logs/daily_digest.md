@@ -1,7 +1,7 @@
-# Daily Digest - 31-07-2026
+# Daily Digest - 01-08-2026
 
 Profiles: Dr. Priya Sharma, Dr. James Chen, Dr. Ananya Patel, Dr. Michael O'Brien, Dr. Sarah Williams
-Today: **30 new** | **0 high match** | Apply Queue: 20
+Today: **20 new** | **0 high match** | Apply Queue: 20
 
 ## Top picks (best profile match)
 _No high-match jobs today._
