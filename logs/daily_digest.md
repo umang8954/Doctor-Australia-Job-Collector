@@ -1,4 +1,4 @@
-# Daily Digest - 16-09-2026
+# Daily Digest - 17-09-2026
 
 Profiles: Dr. Priya Sharma, Dr. James Chen, Dr. Ananya Patel, Dr. Michael O'Brien, Dr. Sarah Williams
 Today: **23 new** | **0 high match** | Apply Queue: 20
