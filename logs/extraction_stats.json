@@ -6,16 +6,6 @@
           "methods": [
             {
               "method": "playwright",
-              "jobs": 14,
-              "seconds": 8.19,
-              "error": ""
-            }
-          ]
-        },
-        {
-          "methods": [
-            {
-              "method": "playwright",
               "jobs": 15,
               "seconds": 9.39,
               "error": ""
@@ -501,21 +491,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 8,
+              "seconds": 11.2,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "western_health": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 8,
-              "seconds": 4.36,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -1005,27 +995,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 21,
+              "seconds": 4.59,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "peninsula_health": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 33.11,
-              "error": "parser_found_nothing: page loaded but no job cards parsed"
-            },
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 3.76,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -1809,21 +1793,27 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 33.08,
+              "error": "parser_found_nothing: page loaded but no job cards parsed"
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 3.46,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "grampians_health": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 14,
-              "seconds": 5.72,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -2367,21 +2357,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 1,
+              "seconds": 4.59,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "eastern_health": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 10,
-              "seconds": 5.49,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -2871,21 +2861,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 3,
+              "seconds": 4.81,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "rch": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 6,
-              "seconds": 4.43,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -3405,21 +3395,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 1,
+              "seconds": 4.29,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "racp": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 23,
-              "seconds": 4.22,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -3909,21 +3899,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 23,
+              "seconds": 3.52,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "smartjobs_qld": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 43,
-              "seconds": 64.83,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -4425,21 +4415,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 40,
+              "seconds": 65.43,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "jobs_nt": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 33,
-              "seconds": 135.97,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -4929,33 +4919,27 @@
               "error": ""
             }
           ]
-        }
-      ]
-    },
-    "careers_vic": {
-      "runs": [
+        },
         {
           "methods": [
             {
               "method": "playwright",
               "jobs": 0,
-              "seconds": 25.06,
-              "error": "zero_jobs_retry"
-            },
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 26.16,
-              "error": ""
+              "seconds": 63.22,
+              "error": "Page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to \"https://jobs.nt.gov.au/Home/Search\", waiting until \"load\"\n"
             },
             {
               "method": "static_html",
               "jobs": 0,
-              "seconds": 2.92,
-              "error": "403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
+              "seconds": 34.88,
+              "error": "HTTPSConnectionPool(host='jobs.nt.gov.au', port=443): Max retries exceeded with url: /Home/Search (Caused by ConnectTimeoutError(<HTTPSConnection(host='jobs.nt.gov.au', port=443) at 0x7f5e4452c4d0>, '"
             }
           ]
-        },
+        }
+      ]
+    },
+    "careers_vic": {
+      "runs": [
         {
           "methods": [
             {
@@ -6033,21 +6017,33 @@
               "error": "403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 27.52,
+              "error": "zero_jobs_retry"
+            },
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 25.3,
+              "error": ""
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 5.27,
+              "error": "403 Client Error: Forbidden for url: https://www.careers.vic.gov.au/jobs?keywords=registrar+medical"
+            }
+          ]
         }
       ]
     },
     "wa_health": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 25,
-              "seconds": 26.16,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -6537,33 +6533,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 28,
+              "seconds": 28.76,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "the_womens": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 3.68,
-              "error": "zero_jobs_retry"
-            },
-            {
-              "method": "static_html",
-              "jobs": 0,
-              "seconds": 5.43,
-              "error": ""
-            },
-            {
-              "method": "playwright",
-              "jobs": 0,
-              "seconds": 12.41,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -7641,21 +7625,33 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 3.5,
+              "error": "zero_jobs_retry"
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 3.36,
+              "error": ""
+            },
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 13.32,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "ranzcog": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 6,
-              "seconds": 18.9,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -8157,21 +8153,21 @@
               "error": "403 Client Error: Forbidden for url: https://jobs.ranzcog.edu.au/jobs"
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 9,
+              "seconds": 19.97,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "jobradars": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "playwright",
-              "jobs": 4,
-              "seconds": 17.37,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -8661,21 +8657,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "playwright",
+              "jobs": 6,
+              "seconds": 16.32,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "pageup": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "pageup_html",
-              "jobs": 5,
-              "seconds": 20.77,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -9165,21 +9161,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "pageup_html",
+              "jobs": 12,
+              "seconds": 24.97,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "mercy_workday": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "mercury_html",
-              "jobs": 2,
-              "seconds": 14.99,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -9669,21 +9665,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "mercury_html",
+              "jobs": 6,
+              "seconds": 17.68,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "gv_health": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 4,
-              "seconds": 5.43,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -10173,21 +10169,21 @@
               "error": ""
             }
           ]
-        }
-      ]
-    },
-    "awh": {
-      "runs": [
+        },
         {
           "methods": [
             {
               "method": "static_html",
               "jobs": 2,
-              "seconds": 3.93,
+              "seconds": 3.81,
               "error": ""
             }
           ]
-        },
+        }
+      ]
+    },
+    "awh": {
+      "runs": [
         {
           "methods": [
             {
@@ -10731,21 +10727,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 3,
+              "seconds": 5.36,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "act_health": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 5,
-              "seconds": 49.15,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -11235,21 +11231,21 @@
               "error": ""
             }
           ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 8,
+              "seconds": 53.93,
+              "error": ""
+            }
+          ]
         }
       ]
     },
     "wave": {
       "runs": [
-        {
-          "methods": [
-            {
-              "method": "static_html",
-              "jobs": 7,
-              "seconds": 3.07,
-              "error": ""
-            }
-          ]
-        },
         {
           "methods": [
             {
@@ -12012,6 +12008,28 @@
               "method": "playwright",
               "jobs": 0,
               "seconds": 12.63,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "methods": [
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 4.37,
+              "error": "zero_jobs_retry"
+            },
+            {
+              "method": "static_html",
+              "jobs": 0,
+              "seconds": 2.23,
+              "error": ""
+            },
+            {
+              "method": "playwright",
+              "jobs": 0,
+              "seconds": 12.29,
               "error": ""
             }
           ]
